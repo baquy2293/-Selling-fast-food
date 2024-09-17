@@ -14,7 +14,7 @@ const _INCODE = true; //Ngăn chặn hành vi truy cập trực tiếp vào file
 
 //Thiết lập host
 
-define('_WEB_HOST_ROOT', 'http://'.$_SERVER['HTTP_HOST'].'/Sellingfastfood'); //Địa chỉ trang chủ
+define('_WEB_HOST_ROOT', 'http://'.$_SERVER['HTTP_HOST'].'/btl/Sellingfastfood'); //Địa chỉ trang chủ
 
 
 

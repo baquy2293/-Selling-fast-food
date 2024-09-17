@@ -32,10 +32,10 @@ function disAdmin($note)
     if (isset($_SESSION['user'])) {
         $conn = connectDB();
         global $idCustomer;
-        $idCustomer = $_SESSION['user']['idUser'];
-        $result = $conn->query("SELECT isAdmin FROM user WHERE idUser = " . $idCustomer . "");
+        $idCustomer = $_SESSION['user']['id'];
+        $result = $conn->query("SELECT is_admin FROM user WHERE id = " . $idCustomer . "");
         $row = $result->fetch_assoc();
-        if ($row['isAdmin'] == 1) {
+        if ($row['is_admin'] == 1) {
             if ($note == 0) {
                 echo '<div class="linkAdmin">
                         <a href="./Admin/"><i class="fab fa-expeditedssl"></i> Quản Trị Trang Web</a>
@@ -56,10 +56,10 @@ function disAdmin2($note)
     if (isset($_SESSION['user'])) {
         $conn = connectDB();
         global $idCustomer;
-        $idCustomer = $_SESSION['user']['idUser'];
-        $result = $conn->query("SELECT isAdmin FROM user WHERE idUser = " . $idCustomer . "");
+        $idCustomer = $_SESSION['user']['id'];
+        $result = $conn->query("SELECT isAdmin FROM user WHERE id = " . $idCustomer . "");
         $row = $result->fetch_assoc();
-        if ($row['isAdmin'] == 1) {
+        if ($row['is_admin'] == 1) {
             if ($note == 0) {
                 echo '<div class="linkAdmin">
                       <a href="../Admin/"><i class="fab fa-expeditedssl"></i> Quản Trị Trang Web</a>
@@ -91,8 +91,8 @@ function disLogin($note)
 {
     if (isset($_SESSION['user'])) {
         $conn = connectDB();
-        $idCustomer = $_SESSION['user']['idUser'];
-        $result = $conn->query("SELECT userName,image FROM user WHERE idUser = " . $idCustomer . "");
+        $idCustomer = $_SESSION['user']['id'];
+        $result = $conn->query("SELECT username,image FROM user WHERE id = " . $idCustomer . "");
 //        $row = getRaw("SELECT userName,image FROM user WHERE idUser = " . $idCustomer . "");
         $row = $result->fetch_assoc();
         if ($note == 0) {
@@ -100,7 +100,7 @@ function disLogin($note)
             <span class="showUser">
               <div class="user__name" onclick="showNavUser()">
                 <img src ="./images/avata/' . $row['image'] . '" class="img__avatar">
-                <span class="userName">' . $row['userName'] . '</span>
+                <span class="userName">' . $row['username'] . '</span>
                 <i class="fas icon_down_user">&#xf107;</i>
               </div>
               <div class="show__nav__user">
@@ -165,9 +165,9 @@ function disLogin($note)
 function cart($note)
 {
     if (isset($_SESSION['user'])) {
-        $idCustomer = $_SESSION['user']['idUser'];
+        $idCustomer = $_SESSION['user']['id'];
         $conn = connectDB();
-        $resultCount = $conn->query("SELECT CD.id_cartDetail FROM cart C INNER JOIN cartdetail CD INNER JOIN user U INNER JOIN product P ON C.id_user = U.idUser AND C.idCartDetail = CD.id_cartDetail AND CD.id_product = P.id_product AND U.idUser =" . $idCustomer . "");
+        $resultCount = $conn->query("SELECT CD.id_cartDetail FROM cart C INNER JOIN cartdetail CD INNER JOIN user U INNER JOIN product P ON C.id_user = U.id AND C.id = CD.id_cartDetail AND CD.id_product = P.id_product AND U.id =" . $idCustomer . "");
         $countCart = $resultCount->num_rows;
         if ($note == 0) {
             echo '

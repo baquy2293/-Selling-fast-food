@@ -9,7 +9,8 @@ layout('header', 'core');
                     <a href="https://www.facebook.com/tbq.2293/?locale=vi_VN" target="_blank"><i
                                 class="fab fa-facebook-f"></i></a>
                     <a href="" target="_blank"><i class="fab fa-instagram"></i></a>
-                    <a href="https://www.linkedin.com/in/qu%C3%BD-b%C3%A1-06189b2b9/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.linkedin.com/in/qu%C3%BD-b%C3%A1-06189b2b9/" target="_blank"><i
+                                class="fab fa-linkedin"></i></a>
                     <a href="" target="_blank"><i class="fab fa-tiktok"></i></a>
                 </div>
                 <?php disAdmin(0) ?>
@@ -18,7 +19,7 @@ layout('header', 'core');
               <i class="fas fa-bell" onclick="showNotification()"></i>
                 <sub><?php
                     if (isset($_SESSION['user'])) {
-                        showCountNotification($_SESSION['user']['idUser']);
+                        showCountNotification($_SESSION['user']['id']);
                     } else {
                         echo 0;
                     }
@@ -26,7 +27,7 @@ layout('header', 'core');
             <div class="show_Notification">
               <ul>
                 <?php if (isset($_SESSION['user'])) {
-                    showNotification($_SESSION['user']['idUser']);
+                    showNotification($_SESSION['user']['id']);
                 } else {
                     echo "<h4>Không có thông báo nào !</h4>";
                 } ?>
@@ -48,7 +49,7 @@ layout('header', 'core');
                     <div class="section_policy">
                         <div class="policy_item">
                             <div class="policy_item_icon">
-                                <img src="<?php echo _WEB_HOST_TEMPLATE ;?>/images/policy_images_1.png" alt="">
+                                <img src="<?php echo _WEB_HOST_TEMPLATE; ?>/images/policy_images_1.png" alt="">
                             </div>
                             <div class="policy_item_content">
                                 <h4>Bảo đảm chất lượng</h4>
@@ -58,7 +59,7 @@ layout('header', 'core');
                         <!-- end policy item -->
                         <div class="policy_item">
                             <div class="policy_item_icon">
-                                <img src="<?php echo _WEB_HOST_TEMPLATE ;?>/images/policy_images_2.png" alt="">
+                                <img src="<?php echo _WEB_HOST_TEMPLATE; ?>/images/policy_images_2.png" alt="">
                             </div>
                             <div class="policy_item_content">
                                 <h4>Miễn phí giao hàng</h4>
@@ -68,7 +69,7 @@ layout('header', 'core');
                         <!-- end policy item -->
                         <div class="policy_item">
                             <div class="policy_item_icon">
-                                <img src="<?php echo _WEB_HOST_TEMPLATE ;?>/images/policy_images_3.png" alt="">
+                                <img src="<?php echo _WEB_HOST_TEMPLATE; ?>/images/policy_images_3.png" alt="">
                             </div>
                             <div class="policy_item_content">
                                 <h4>Hỗ trợ 24/7</h4>
@@ -102,7 +103,8 @@ layout('header', 'core');
                 <!-- end nav_top -->
                 <div class="search">
                     <form action="./Product/index.php" method="post">
-                        <input type="text" oninput="errorLog()" placeholder="Tìm Kiếm Sản Phẩm" name="txtSearch" required/>
+                        <input type="text" oninput="errorLog()" placeholder="Tìm Kiếm Sản Phẩm" name="txtSearch"
+                               required/>
                         <button name="bntSearch" onclick="return checkForm()"><i class="fas fa-search"></i></button>
                     </form>
                     <div class="error_log">
@@ -128,7 +130,7 @@ layout('header', 'core');
                             <form action="" method="post">
                                 <?php
                                 if (isset($_SESSION['user'])) {
-                                    showCartMini($_SESSION['user']['idUser'], 1);
+                                    showCartMini($_SESSION['user']['id'], 1);
                                     if (isset($_POST['deleteCart'])) {
 
                                         $body = getBody();
@@ -136,13 +138,13 @@ layout('header', 'core');
 
 //                                        $conn = connectDB();
 //                                        $idCartDetail = $_POST['deleteCart'];
-                                        delete('cart','cart.idCartDetail ='.$idCartDetail);
+                                        delete('cart', 'cart.idCartDetail =' . $idCartDetail);
 //                                        $sql1 = "DELETE FROM cart WHERE cart.idCartDetail =" . $idCartDetail . ""; // xóa giỏi hàng có mã hàng chi tiết đấy
 //                                        $conn->query($sql1);
 
 //                                        $sql2 = "DELETE FROM cartdetail WHERE cartdetail.id_cartDetail =" . $idCartDetail . ""; // xóa giỏ hàng chi tiết
 //                                        $conn->query($sql2);
-                                        delete('cartdetail',"cartdetail.id_cartDetail =".$idCartDetail);
+                                        delete('cartdetail', "cartdetail.id_cartDetail =" . $idCartDetail);
                                         header("Refresh:0");
                                     }
                                 } else {

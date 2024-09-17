@@ -16,12 +16,13 @@ if (isPost()) {
             $passWordHash = $userQuery['password'];
             if (password_verify($password, $passWordHash)) {
                 if ($userQuery['disabled'] == 0) {
-                    if ($userQuery['is_admin'] == 0) {
-                        redirect("?module=client&action=views");
-                    } elseif ($userQuery['isAdmin'] == 1) {
+                    $_SESSION['user'] = $userQuery;
+                    if ($userQuery['is_role'] == 0) {
                         redirect("?module=admin&action=views");
-                    } else {
+                    } elseif ($userQuery['is_admin'] == 1) {
                         redirect("?module=staff&action=views");
+                    } else {
+                        redirect("?module=client&action=views");
                     }
                 } else {
                     setFlashData("msg", "Tài khoản của bạn đang bị đình chỉ hãy liên hệ với quản trị viên để mở khóa");
