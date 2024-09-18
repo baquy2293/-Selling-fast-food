@@ -5,16 +5,18 @@ use users_manager\Sellingfastfood\includes\phpmailer\PHPMailer;
 use users_manager\Sellingfastfood\includes\phpmailer\SMTP;
 use users_manager\Sellingfastfood\includes\phpmailer\Exception;
 
-function layout($layoutName='header', $dir='', $data = []){
+function layout($layoutName = 'header', $dir = '', $data = [])
+{
 
-    if (!empty($dir)){
-        $dir = '/'.$dir;
+    if (!empty($dir)) {
+        $dir = '/' . $dir;
     }
 
-    if (file_exists(_WEB_PATH_TEMPLATE.$dir.'/layouts/'.$layoutName.'.php')){
-        require_once _WEB_PATH_TEMPLATE.$dir.'/layouts/'.$layoutName.'.php';
+    if (file_exists(_WEB_PATH_TEMPLATE . $dir . '/layouts/' . $layoutName . '.php')) {
+        require_once _WEB_PATH_TEMPLATE . $dir . '/layouts/' . $layoutName . '.php';
     }
 }
+
 function sendMail($to, $subject, $content)
 {
     //Create an instance; passing `true` enables exceptions
@@ -188,15 +190,13 @@ function old($fieldName, $oldData, $default = null)
 function isLogin()
 {
     $checkLogin = false;
-    if (getSession('loginToken')) {
-        $tokenLogin = getSession('loginToken');
-        $queryToken = firstRaw("SELECT userId FROM login_token WHERE token='$tokenLogin'");
-        if (!empty($queryToken)) {
-            $checkLogin = $queryToken;
-        } else {
-            removeSession('loginToken');
-        }
+
+    if (!empty(getSession('user'))) {
+        return true;
+    } else {
+        return false;
     }
+
     return $checkLogin;
 }
 

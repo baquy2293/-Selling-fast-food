@@ -28,7 +28,7 @@
     <title>Chào mừng đến với Fast Food</title>
     <style>
         :root {
-            --bg-color: #CD8B3D;
+            --bg-color: #B38B60;
             --text-color: #157332;
             --textPrice-color: #d21e1eff;
         }

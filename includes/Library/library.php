@@ -9,19 +9,19 @@ function logo($note)
     $row = firstRaw("SELECT * FROM information ");
     if ($note == 0) {
         echo '
-            <img class="img-fluid" src="'._WEB_HOST_TEMPLATE.'/images/' . $row['logo'] . '" alt="Theme-Logo" />
+            <img class="img-fluid" src="' . _WEB_HOST_TEMPLATE . '/images/' . $row['logo'] . '" alt="Theme-Logo" />
         ';
     } else if ($note == 1) {
         echo '
-            <img class="img-fluid" src="'._WEB_HOST_TEMPLATE.'/images/' . $row['logo'] . '" alt="Theme-Logo" />
+            <img class="img-fluid" src="' . _WEB_HOST_TEMPLATE . '/images/' . $row['logo'] . '" alt="Theme-Logo" />
         ';
     } else if ($note == 2) {
         echo '
-            <img src="'._WEB_HOST_TEMPLATE.'/images/' . $row['logo'] . '" alt="logo PoDo" />
+            <img src="' . _WEB_HOST_TEMPLATE . '/images/' . $row['logo'] . '" alt="logo PoDo" />
         ';
     } else if ($note == 3) {
         echo '
-            <img src="'._WEB_HOST_TEMPLATE.'/images/' . $row['logo'] . '" alt="logo PoDo" />
+            <img src="' . _WEB_HOST_TEMPLATE . '/images/' . $row['logo'] . '" alt="logo PoDo" />
         ';
     }
 }
@@ -971,31 +971,29 @@ function showPhoneWeb()
 // admin: avata admin
 function avatar($id, $note)
 {
-    $conn = connectDB();
-    $result = $conn->query("SELECT * FROM user WHERE idUser = '" . $id . "'");
-    $row = $result->fetch_assoc();
+    $row = first("user", "*", $id);
     if ($note == 0) {
         echo '
-            <img src=".././images/avata/' . $row['image'] . '" class="img-radius" alt="User-Profile-Image">
-            <span>' . $row['userName'] . '</span>
+            <img src="' . _WEB_HOST_TEMPLATE . '/images/avata/' . $row['image'] . '" class="img-radius" alt="User-Profile-Image">
+            <span>' . $row['username'] . '</span>
         ';
     } else if ($note == 1) {
         echo '
-            <img class="img-80 img-radius" src=".././images/avata/' . $row['image'] . '" alt="User-Profile-Image">
+            <img class="img-80 img-radius" src="' . _WEB_HOST_TEMPLATE . '/images/avata/' . $row['image'] . '" alt="User-Profile-Image">
             <div class="user-details">
-                <span id="more-details">' . $row['userName'] . '<i class="fa fa-caret-down"></i></span>
+                <span id="more-details">' . $row['username'] . '<i class="fa fa-caret-down"></i></span>
             </div>
         ';
     } else if ($note == 2) {
         echo '
-            <img src="../../images/avata/' . $row['image'] . '" class="img-radius" alt="User-Profile-Image">
-            <span>' . $row['userName'] . '</span>
+            <img src="' . _WEB_HOST_TEMPLATE . '/images/avata/' . $row['image'] . '" class="img-radius" alt="User-Profile-Image">
+            <span>' . $row['username'] . '</span>
         ';
     } else if ($note == 3) {
         echo '
-            <img class="img-80 img-radius" src="../../images/avata/' . $row['image'] . '" alt="User-Profile-Image">
+            <img class="img-80 img-radius" src="' . _WEB_HOST_TEMPLATE . '/images/avata/' . $row['image'] . '" alt="User-Profile-Image">
             <div class="user-details">
-                <span id="more-details">' . $row['userName'] . '<i class="fa fa-caret-down"></i></span>
+                <span id="more-details">' . $row['username'] . '<i class="fa fa-caret-down"></i></span>
             </div>
         ';
     }
@@ -1377,17 +1375,15 @@ function updatePoster($idPoster, $nameImg)
 //
 function updateLogoSetting($img)
 {
-    $conn = connectDB();
-    $conn->query("UPDATE information SET logo = '" . $img . "'");
-    header("Refresh:0");
+    update('information', ['logo' => "$img"]);
 }
 
 // nameimg
 function nameImgLogo()
 {
-    $conn = connectDB();
-    $result = $conn->query("SELECT logo FROM information");
-    $row = $result->fetch_assoc();
+
+    $row = firstRaw("SELECT logo FROM information");
+
     echo '<span>' . $row['logo'] . '</span>';
 }
 
@@ -1403,42 +1399,31 @@ function nameimg($idUser)
 // admin showAdress
 function showAdress()
 {
-
-    $conn = connectDB();
-    $result = $conn->query("SELECT * FROM information");
-    $row = $result->fetch_assoc();
+    $row = get("information",'address');
     echo '
   <div class="from_group_item">
       <label for="">Địa Chỉ:</label>
-      <input type="text" required name="txtAdress" disabled value="' . $row['address1'] . '">
+      <input type="text" required name="txtAdress" disabled value="  ' . $row[0]['address'] . '">
   </div>';
 }
 
 // admin updateAdress
 function updateAddress($txtAdress)
 {
-    try {
-        $conn = connectDB();
-        $conn->query("UPDATE information SET address1 = '" . $txtAdress . "'");
-        header('Refresh:0');
-    } catch (Exception $e) {
-        echo '<p>Cập Nhật Lỗi</p>';
-    }
+    $status = update('information', ['address' => $txtAdress]);
 }
 
 // admin updateAdress
-function updatePersonalInformation($fullName, $email, $phone, $adress, $idUser)
+function updatePersonalInformation($fullName, $email, $phone, $adress, $id)
 {
     try {
         $conn = connectDB();
-        $conn->query("UPDATE user SET fullName = '" . $fullName . "', email = '" . $email . "', phone = '" . $phone . "', adress = '" . $adress . "' WHERE idUser = " . $idUser . "");
-
+        $conn->query("UPDATE user SET fullName = '" . $fullName . "', email = '" . $email . "', phone = '" . $phone . "', adress = '" . $adress . "' WHERE id = " . $id . "");
         // cập nhật session
-        $_SESSION['user']['fullName'] = $fullName;
+        $_SESSION['user']['fullname'] = $fullName;
         $_SESSION['user']['email'] = $email;
         $_SESSION['user']['phone'] = $phone;
         $_SESSION['user']['adress'] = $adress;
-        header('Refresh:0');
     } catch (Exception $e) {
         echo '<p>Email này đã được sử dụng</p>';
     }
@@ -1447,9 +1432,8 @@ function updatePersonalInformation($fullName, $email, $phone, $adress, $idUser)
 // admin showContact
 function showContact()
 {
-    $conn = connectDB();
-    $result = $conn->query("SELECT * FROM information");
-    $row = $result->fetch_assoc();
+    $result = get("information");
+foreach ($result as $row) {
     echo '
     <div class="from_group_item">
       <label for="">Số Điện Thoại:</label>
@@ -1459,15 +1443,19 @@ function showContact()
       <label for="">Email:</label>
       <input type="email" name="txtEmail" required disabled value="' . $row['email'] . '">
     </div>';
+}
+
 
 }
 
 // admin updateContact
 function updateContact($valPhone, $valEmail)
 {
-    $conn = connectDB();
-    $result = $conn->query("UPDATE information SET phone = '" . $valPhone . "', email = '" . $valEmail . "';");
-    header('Refresh:0');
+    $data = [
+        'phone' => $valPhone,
+        'email' => $valEmail
+    ];
+    update('information', $data);
 }
 
 // Hiện thị các sản phẩm của đơn hàng đó

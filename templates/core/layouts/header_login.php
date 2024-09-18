@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #CD8B3D;
+            --bg-color: #B38B60;
             --text-color: #157332;
         }
     </style>
