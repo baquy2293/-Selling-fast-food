@@ -95,6 +95,7 @@ function disLogin($note)
         $result = $conn->query("SELECT username,image FROM user WHERE id = " . $idCustomer . "");
 //        $row = getRaw("SELECT userName,image FROM user WHERE idUser = " . $idCustomer . "");
         $row = $result->fetch_assoc();
+        var_dump($row);
 
         if ($note == 0) {
             echo '
@@ -191,13 +192,15 @@ function showProductHot()
 {
     $conn = connectDB();
     $result = $conn->query("SELECT * FROM product WHERE id_category = 32");
+   $row=$result->fetch_array();
+    echo ' <img src="'._WEB_HOST_TEMPLATE.'/images/' . $row['image'] . '" alt=""/>';
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             echo '
                     <a href="./Product_Detail/sanpham.php?id=' . $row['id_product'] . '">
                       <div class="item-product-hot">
                         <div class="item-product-hot-img">
-                          <img src="'._WEB_HOST_TEMPLATE.'/images/' . $row['image'] . '" alt=""/>
+                          <img src="./images/' . $row['image'] . '" alt=""/>
                           <span class="discount">- ' . $row['discount'] . '%</span>
                           <span class="price">' . number_format($row['price'] - $row['discount'] / 100) . ' đ</span>
                         </div>
@@ -212,7 +215,6 @@ function showProductHot()
         }
     }
 }
-
 // Mua Ngay
 // <span class="price-product">'.number_format($row['price']).' đ</span>
 
@@ -227,7 +229,7 @@ function showProductCategory($category)
             echo '
         <div class="item-product-hot">
           <div class="item-product-hot-img">
-            <img src="./images/' . $row['image'] . '" alt="" />
+            <img src="'._WEB_HOST_TEMPLATE.'./images/' . $row['image'] . '" alt="" />
             <a href="./Product_Detail/sanpham.php?id=' . $row["id_product"] . '">Mua Ngay</a>
             <span class="discount">- ' . $row['discount'] . '%</span>
           </div>
@@ -1147,7 +1149,7 @@ function showComment()
                 <td>' . $row['minDate'] . '</td>
                 <td>' . $row['maxDate'] . '</td>
                 <td class="box__bnt">
-                <a href="./commentDetail.php?idProduct=' . $row['id_product'] . '"><button class="bnt__comment comment__edit">Chi Tiết</button></a>
+                <a href="?module=admin&action=comment_detail&id=' . $row['id_product'] . '"><button class="bnt__comment comment__edit">Chi Tiết</button></a>
                 </td>
             </tr> 
              
@@ -1171,14 +1173,14 @@ function showProductName($idProductCM)
 function showCommentDetail($idProductCM)
 {
     $conn = connectDB();
-    $result = $conn->query("SELECT U.image, U.userName, CM.date, CM.content, CM.id_comment FROM comment CM INNER JOIN user U  INNER JOIN product P ON CM.user_id = U.idUser AND CM.id_product = P.id_product WHERE CM.disabled NOT IN (1) AND CM.id_product= '" . $idProductCM . "' ORDER BY CM.date DESC ");
+    $result = $conn->query("SELECT U.image, U.userName, CM.date, CM.content, CM.id FROM comment CM INNER JOIN user U  INNER JOIN product P ON CM.user_id = U.id AND CM.id_product = P.id_product WHERE CM.disabled NOT IN (1) AND CM.id_product= '" . $idProductCM . "' ORDER BY CM.date DESC ");
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             echo '
                 <div class="item_comment">
                     <div class="header_comment">
                         <div class="user">
-                            <img src="../../images/avata/' . $row['image'] . '" alt="">
+                            <img src="'._WEB_HOST_TEMPLATE.'/images/avata/' . $row['image'] . '" alt="">
                             <span>' . $row['userName'] . '</span>
                         </div>
                         <div class="time_comment">
@@ -1189,7 +1191,7 @@ function showCommentDetail($idProductCM)
                     <div class="content_comment">
                         <p>' . $row['content'] . '</p>
                         <div class="bnt-delete_comment">
-                            <button name="bntDelete" value="' . $row['id_comment'] . '">Ẩn</button>
+                            <button name="bntDelete" value="' . $row['id'] . '">Ẩn</button>
                         </div>
                     </div>
                     <!-- end content_comment -->
@@ -1550,9 +1552,9 @@ function insertCodeDiscount($endDate, $valueDiscount)
     $conn = connectDB();
     $result = $conn->query("INSERT INTO codediscount VALUES(null, 'HQ" . str_rand(6) . "', " . $valueDiscount . ", '" . $endDate . "', 0, null)");
     if ($result) {
-        echo '<p style="color: green;">Bạn đã thêm thành công !</p>';
+        echo '<p class="notification__success"  ">Bạn đã thêm thành công !</p>';
     } else {
-        echo "<p style='color: red;'>Lỗi thêm mới.... Vui lòng thử lại !</p>";
+        echo '<p   class="notification__fail">Lỗi thêm mới.... Vui lòng thử lại !</p>';
     }
 }
 
@@ -1562,9 +1564,9 @@ function updateCodeDiscount($endDate, $valueDiscount, $idCode)
     $conn = connectDB();
     $result = $conn->query("UPDATE codediscount SET discount = '" . $valueDiscount . "', endDate = '" . $endDate . "' WHERE codediscount.idCode = " . $idCode . ";");
     if ($result) {
-        echo "<p style='color: green;'>Bạn đã cập nhật thành công</p>";
+        echo "<p class='notification__success'>Bạn đã cập nhật thành công</p>";
     } else {
-        echo "<p style='color: red;'>Cập nhật lỗi.... Vui lòng thử lại !</p>";
+        echo "<p class='notification__fail''>Cập nhật lỗi.... Vui lòng thử lại !</p>";
     }
 }
 
@@ -1574,9 +1576,9 @@ function deleteCodeDiscount($idCode)
     $conn = connectDB();
     $result = $conn->query("DELETE FROM codediscount WHERE codediscount.idCode = " . $idCode . "");
     if ($result) {
-        echo "<p style='color: green;'>Bạn đã xóa thành công !</p>";
+        echo "<p  class='notification__success' '>Bạn đã xóa thành công !</p>";
     } else {
-        echo "<p style='color: red;'>Xóa lỗi.... Vui lòng thử lại !</p>";
+        echo "<p class='notification__fail'>Xóa lỗi.... Vui lòng thử lại !</p>";
     }
 }
 

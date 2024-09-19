@@ -21,8 +21,8 @@
 
 namespace PHPMailer\PHPMailer;
 
-use users_manager\Sellingfastfood\includes\phpmailer\Exception;
-use users_manager\Sellingfastfood\includes\phpmailer\SMTP;
+use btl\Sellingfastfood\includes\phpmailer\Exception;
+use btl\Sellingfastfood\includes\phpmailer\SMTP;
 
 /**
  * PHPMailer - PHP email creation and transport class.

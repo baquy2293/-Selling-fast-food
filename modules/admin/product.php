@@ -130,13 +130,10 @@ layout('header', 'admin', $data);
                     if (!$result) {
                         echo '<span class="notification__fail">Sửa Thất Bại !</span>';
                     } else {
-                        echo '<span class="notification__success">Sửa Thành Công !</span>';
+                        echo '<span class="notification__success">Sửa Thành Công !</span>';     
                     }
-                    echo '<script>
-                                                        setTimeout(function(){
-                                                             window.location.href = "?module=admin&action=product";
-                                                        }, 2);
-                                                        </script>';
+                                                           
+                                                                      
                 }
 
                 ?>
