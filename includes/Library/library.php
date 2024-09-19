@@ -38,11 +38,11 @@ function disAdmin($note)
         if ($row['is_admin'] == 1) {
             if ($note == 0) {
                 echo '<div class="linkAdmin">
-                        <a href="./Admin/"><i class="fab fa-expeditedssl"></i> Quản Trị Trang Web</a>
+                        <a href="?module=admin&action=views"><i class="fab fa-expeditedssl"></i> Quản Trị Trang Web</a>
                         </div>';
             } else if ($note == 1) {
                 echo '<div class="linkAdmin">
-                        <a href="../Admin/"><i class="fab fa-expeditedssl"></i> Quản Trị Trang Web</a>
+                        <a href="?module=admin&action=views"><i class="fab fa-expeditedssl"></i> Quản Trị Trang Web</a>
                     </div>';
 
             }
@@ -95,6 +95,7 @@ function disLogin($note)
         $result = $conn->query("SELECT username,image FROM user WHERE id = " . $idCustomer . "");
 //        $row = getRaw("SELECT userName,image FROM user WHERE idUser = " . $idCustomer . "");
         $row = $result->fetch_assoc();
+
         if ($note == 0) {
             echo '
             <span class="showUser">
@@ -118,7 +119,7 @@ function disLogin($note)
                 <span class="showUser">
               <div class="user__name" onclick="showNavUser()">
                 <img src ="../images/avata/' . $row['image'] . '" class="img__avatar">
-                <span class="userName">' . $row['userName'] . '</span>
+                <span class="userName">' . $row['usermame'] . '</span>
                 <i class="fas icon_down_user">&#xf107;</i>
               </div>
               <div class="show__nav__user">
@@ -196,7 +197,7 @@ function showProductHot()
                     <a href="./Product_Detail/sanpham.php?id=' . $row['id_product'] . '">
                       <div class="item-product-hot">
                         <div class="item-product-hot-img">
-                          <img src="./images/' . $row['image'] . '" alt=""/>
+                          <img src="'._WEB_HOST_TEMPLATE.'/images/' . $row['image'] . '" alt=""/>
                           <span class="discount">- ' . $row['discount'] . '%</span>
                           <span class="price">' . number_format($row['price'] - $row['discount'] / 100) . ' đ</span>
                         </div>
@@ -469,7 +470,7 @@ function disTxtSearch($txtSearch)
 function showNotification($idUser)
 {
     $conn = connectDB();
-    $result = $conn->query("SELECT * FROM notification WHERE id_user = " . $idUser . " ORDER BY id DESC ");
+    $result = $conn->query("SELECT * FROM notification WHERE id = " . $idUser . " ORDER BY id DESC ");
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             echo '
@@ -490,7 +491,7 @@ function showNotification($idUser)
 function showCountNotification($idUser)
 {
     $conn = connectDB();
-    $result = $conn->query("SELECT * FROM notification WHERE id_user = " . $idUser . " ORDER BY id DESC ");
+    $result = $conn->query("SELECT * FROM notification WHERE id = " . $idUser . " ORDER BY id DESC ");
     if ($result->num_rows > 0) {
         echo $result->num_rows;
     } else {
@@ -504,7 +505,7 @@ function showCountNotification($idUser)
 function showCartMini($idCustomer, $note)
 {
     $conn = connectDB();
-    $result = $conn->query("SELECT * FROM cart C INNER JOIN cartdetail CD INNER JOIN user U INNER JOIN product P ON C.id_user = U.idUser AND C.idCartDetail = CD.id_cartDetail AND CD.id_product = P.id_product AND U.idUser =" . $idCustomer . "");
+    $result = $conn->query("SELECT * FROM cart C INNER JOIN cartdetail CD INNER JOIN user U INNER JOIN product P ON C.id_user = U.id AND C.idCartDetail = CD.id_cartDetail AND CD.id_product = P.id_product AND U.id =" . $idCustomer . "");
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             if ($note == 1) {

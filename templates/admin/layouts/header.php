@@ -49,6 +49,16 @@ if (!isLogin()) {
         href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style.css?ver=<?php echo rand(); ?>">
     <link rel="stylesheet" type="text/css"
         href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style_setting.css?ver=<?php echo rand(); ?>">
+    <link rel="stylesheet" type="text/css"
+        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style_chart.css?ver=<?php echo rand(); ?>">
+    <link rel="stylesheet" type="text/css"
+        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style_product.css?ver=<?php echo rand(); ?>">
+    <link rel="stylesheet" type="text/css"
+        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style_category.css?ver=<?php echo rand(); ?>">
+    <link rel="stylesheet" type="text/css"
+        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style_comment.css?ver=<?php echo rand(); ?>">
+        <link rel="stylesheet" type="text/css"
+        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style_discount.css?ver=<?php echo rand(); ?>">
 
 </head>
 
@@ -198,7 +208,7 @@ if (!isLogin()) {
                             <?php if ($_SESSION['user']['is_admin'] == 1) { ?>
 
                             <ul class="pcoded-item pcoded-left-item">
-                                <li class="pcoded-hasmenu ">
+                                <li class="pcoded-hasmenu  ">
                                     <a href="javascript:void(0)" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-layout-grid2-alt"></i><b>BC</b></span>
                                         <span class="pcoded-mtext">Quản Lý Hệ Thống</span>

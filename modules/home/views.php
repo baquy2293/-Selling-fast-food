@@ -34,7 +34,7 @@ layout('header', 'core');
               </ul>
             </div>
             </span>
-                    <?php disLogin(0) ?>
+                    <?php disLogin(1) ?>
                 </div>
             </div>
             <div class="header_top">
@@ -162,6 +162,120 @@ layout('header', 'core');
             </div>
             <!-- end header_bottom -->
         </header>
+        <main>
+            <div class="banner">
+                <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <?php
+                        $i = 1;
+                        $conn = connectDB();
+                        $result = $conn->query("SELECT * FROM slide ");
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                if ($i++ == 1) {
+                                    echo '
+                        <div class="carousel-item active">
+                         
+                          <img class="bannerImg" src="' . _WEB_HOST_TEMPLATE . '/images/' .$row['image'] . '" class="d-block w-100" alt="...">
+                          </a>
+                        </div>
+                      ';
+                                } else {
+                                    echo '
+                        <div class="carousel-item">
+                          <a href="' . $row['link'] . '">
+                          <img class="bannerImg" src="' . _WEB_HOST_TEMPLATE . './images/' . $row['image'] . '" class="d-block w-100" alt="...">
+                          </a>
+                        </div>
+                      ';
+                                }
+                            }
+                        }
+                        ?>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+            <!-- end banner -->
+            <div class="product_hot">
+                <div class="title-product_hot">
+                    <h1 id="title_deal">Commbo</h1>
+                </div>
+                <!-- end title-product_hot -->
+                <div class="box-product_Hot">
+                    <div class="owl-carousel owl-theme">
+                        <?php showProductHot(); ?>
+                    </div>
+                </div>
+            </div>
+            <!-- end product-hot -->
+            <div class="product_lemonTea">
+                <div class="title-product_hot">
+                    <h1 id="title_deal">Đồ Ăn Nhanh</h1>
+                </div>
+                <!-- end title-product_hot -->
+                <div class="box-product_Hot">
+                    <?php showProductCategory(30) ?>
+                </div>
+            </div>
+            <!-- end product_lemonTea -->
+            <div class="product_drinkTea">
+                <div class="title-product_hot">
+                    <h1 id="title_deal">Đồ Uống</h1>
+                </div>
+                <!-- end title-product_hot -->
+                <div class="box-product_Hot">
+                    <?php showProductCategory(31) ?>
+                </div>
+                <!-- end box-product_Hot -->
+            </div>
+            <!-- end product_drinkTea -->
+            <div class="list-category">
+                <div class="title-list-category">
+                    <h1>Danh Mục Sản Phẩm</h1>
+                </div>
+                <div class="slide-category">
+                    <div class="owl-carousel owl-theme">
+                        <?php
+                        $conn = connectDB();
+                        $result = $conn->query("SELECT * FROM category");
+                        var_dump($result);
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo '<a href="?module=product&action=&idML=' . $row['id'] . '" class="linkCategory">
+                          <div class="item list-category-item">
+                            <img src="' . _WEB_HOST_TEMPLATE . './images/' . $row['image'] . '" alt="" />
+                            <span>' . $row['nameCategory'] . '</span>
+                          </div>
+                        </a>
+                  ';
+                            }
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <!-- end list category-->
+            <div class="quisle">
+                <div class="title_quisle">
+                    <h1>Các Thương Hiệu Đã Liên Kết</h1>
+                </div>
+                <div class="item_quisle">
+                    <a href="https://www.grab.com" target="_blank"><img src="<?php echo _WEB_HOST_TEMPLATE?>/images/logo_grap.png" alt="Grap"/></a>
+                    <a href="https://www.now.vn" target="_blank"><img src="<?php echo _WEB_HOST_TEMPLATE?>/images/logo_now.png" alt="Now"/></a>
+                    <a href="https://momo.vn" target="_blank"><img src="<?php echo _WEB_HOST_TEMPLATE?>/images/logo_momo.png" alt="MoMo"/></a>
+                </div>
+            </div>
+        </main>
 
     </div>
 

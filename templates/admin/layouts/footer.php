@@ -24,5 +24,7 @@
 <script src="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/js/pcoded.min.js"></script>
 <script src="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/js/vertical/vertical-layout.min.js "></script>
 <script src="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/js/jsSetting.js "></script>
-
+<script src="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/js/jschart.js "></script>
+<script src="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/js/jsProduct.js "></script>
+<script src="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/js/jsCategory.js "></script>
 <script type="text/javascript" src="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/js/script.js "></script><?php
