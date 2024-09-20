@@ -3,7 +3,8 @@ $data = [
     'pageTitle' => 'Cài đặt',
     'title' => "Cài đặt",
     'content' => 'Cài đặt thông tin website',
-    'select' => 2
+    'select' => 2,
+    'style'=>'slider'
 ];
 layout('header', 'admin', $data);
 
@@ -89,7 +90,7 @@ layout('header', 'admin', $data);
                                                         <tr>
                                                             <td><input type="checkbox" name="checkbox[]" value = "'.$row['id_silde'].'"/></td>
                                                             <td>'.$row['id_silde'].'</td>
-                                                            <td class="show__list__img" ><img src="../../images/'.$row['image'].'"></td>
+                                                            <td class="show__list__img" ><img src="'._WEB_HOST_TEMPLATE.'/images/'.$row['image'].'"></td>
                                                             <td>'.$row['link'].'</td>
                                                             <td class="box__bnt">
                                                             <button class="bnt__category category__edit" name ="editSilde" value="'.$row['id_silde'].'">Sửa</button>

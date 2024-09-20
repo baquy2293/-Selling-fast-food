@@ -3,7 +3,8 @@ $data = [
     'pageTitle' => 'Thống kê',
     'title' => "Thống kê",
     'content' => 'Thống kê dữ liệu website',
-    'select' => 4
+    'select' => 4,
+    'style'=>'static'
 ];
 layout('header', 'admin', $data);
 ?>
@@ -36,86 +37,116 @@ layout('header', 'admin', $data);
 </div>
 
 <?php
-layout('footer', 'admin');
+layout('footer','admin',$data);
 
 ?>
+<?php
+$conn = connectDB();
+
+// Lấy dữ liệu thống kê số lượng sản phẩm theo loại
+$result_category = $conn->query("SELECT COUNT(id) AS 'SL', category.nameCategory 
+                                 FROM category 
+                                 INNER JOIN product ON category.id = product.id_category 
+                                 GROUP BY category.nameCategory");
+
+// Lấy dữ liệu thống kê doanh thu theo tháng
+$result_revenue = $conn->query("SELECT (SUM(OD.price * OD.qty) + O.feeShip) AS 'tongtien', MONTH(O.dateOrder) AS 'thang', YEAR(O.dateOrder) AS 'nam' 
+                                FROM orderr O 
+                                INNER JOIN oderdetail OD 
+                                ON O.id_oderDetail = OD.id_oderDetail 
+                                WHERE O.status = 5 
+                                AND YEAR(O.dateOrder) = 2021 
+                                GROUP BY MONTH(O.dateOrder)");
+
+// Lấy dữ liệu thống kê sản phẩm bán chạy
+$result_top_products = $conn->query("SELECT COUNT(oderdetail.id_product) AS 'SLSP', product.nameProduct 
+                                     FROM oderdetail 
+                                     INNER JOIN product ON product.id_product = oderdetail.id_product 
+                                     GROUP BY oderdetail.id_product 
+                                     LIMIT 10");
+
+$conn->close();
+?>
+
 <script>
-        google.charts.load('current', { 'packages': ['corechart'] });
-        google.charts.setOnLoadCallback(drawChart);
+    // Load Google Charts cho cả hai biểu đồ
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawCharts);
 
-        function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Đồ Uống', 'Số Sản Phẩm'],
-                <?php 
-                    $conn = connectDB();
-                    $result = $conn -> query("SELECT COUNT(id) AS 'SL', category.nameCategory FROM category INNER JOIN product ON category.id = product.id_category GROUP BY category.nameCategory") ;
-                    while ($row = $result -> fetch_assoc()) {
-                        echo "['".$row['nameCategory']."', ".$row['SL']."],";
-                    }   
-                ?>
-            ]);
+    function drawCharts() {
+        drawChartCategory();
+        drawChartRevenue();
+    }
 
-            var options = {
-                title: 'Biểu Đồ Quy Mô Các Loại Hàng Hóa',
-                is3D: true
-            };
+    // Biểu đồ số lượng sản phẩm theo loại
+    function drawChartCategory() {
+        var data = google.visualization.arrayToDataTable([
+            ['Đồ Uống', 'Số Sản Phẩm'],
+            <?php 
+                while ($row = $result_category->fetch_assoc()) {
+                    echo "['".$row['nameCategory']."', ".$row['SL']."],";
+                }
+            ?>
+        ]);
 
-            var chart = new google.visualization.PieChart(document.getElementById('myChart_category'));
-            chart.draw(data, options);
-        }
-    </script>
+        var options = {
+            title: 'Biểu Đồ Quy Mô Các Loại Hàng Hóa',
+            is3D: true
+        };
 
-    <script>
-        google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawChartComment);
+        var chart = new google.visualization.PieChart(document.getElementById('myChart_category'));
+        chart.draw(data, options);
+    }
 
-        function drawChartComment() {
-            var data = google.visualization.arrayToDataTable([
-                ['Tháng', 'Doanh Thu'],
-                <?php 
-                    $conn = connectDB();
-                    $result = $conn -> query('SELECT (SUM(OD.price * OD.qty) + O.feeShip) AS "tongtien", MONTH(O.dateOrder) AS "thang", YEAR(O.dateOrder) AS "nam" FROM orderr O INNER JOIN oderdetail OD INNER JOIN product P INNER JOIN status S ON O.id_oderDetail = OD.id_oderDetail AND O.status = S.id AND OD.id_product = P.id_product WHERE O.status = 5 AND YEAR(O.dateOrder) = 2021 GROUP BY MONTH(O.dateOrder)') ;
-                    while ($row = $result -> fetch_assoc()) {
-                        echo "['Tháng ".$row['thang']."', ".$row['tongtien']."],";
-                    }   
-                ?>
-            ]);
+    // Biểu đồ doanh thu theo tháng
+    function drawChartRevenue() {
+        var data = google.visualization.arrayToDataTable([
+            ['Tháng', 'Doanh Thu'],
+            <?php 
+                while ($row = $result_revenue->fetch_assoc()) {
+                    echo "['Tháng ".$row['thang']."', ".$row['tongtien']."],";
+                }
+            ?>
+        ]);
 
-            var options = {
-                title: 'Biểu Đồ Doanh Thu Từng Tháng',
-            };
-            var chart = new google.visualization.BarChart(document.getElementById('myCharRevenue'));
-            chart.draw(data, options);
-        }
-    </script>
-    
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script>
+        var options = {
+            title: 'Biểu Đồ Doanh Thu Từng Tháng'
+        };
+
+        var chart = new google.visualization.BarChart(document.getElementById('myCharRevenue'));
+        chart.draw(data, options);
+    }
+</script>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    // Dữ liệu cho biểu đồ sản phẩm bán chạy
     var xArray = [
         <?php 
-            $conn = connectDB();
-            $result = $conn -> query('SELECT COUNT(oderdetail.id_product) AS "SLSP", product.nameProduct FROM oderdetail INNER JOIN product ON product.id_product = oderdetail.id_product GROUP BY oderdetail.id_product LIMIT 10') ;
-            while ($row = $result -> fetch_assoc()) {
+            while ($row = $result_top_products->fetch_assoc()) {
                 echo '"'.$row['nameProduct'].'",';
-            }   
+            }
         ?>
     ];
     var yArray = [
         <?php 
-            $conn = connectDB();
-            $result = $conn -> query('SELECT COUNT(oderdetail.id_product) AS "SLSP", product.nameProduct FROM oderdetail INNER JOIN product ON product.id_product = oderdetail.id_product GROUP BY oderdetail.id_product LIMIT 10') ;
-            while ($row = $result -> fetch_assoc()) {
-                echo $row['SLSP'].' ,';
-            }   
+            $result_top_products->data_seek(0);  // Quay lại từ đầu kết quả
+            while ($row = $result_top_products->fetch_assoc()) {
+                echo $row['SLSP'].',';
+            }
         ?>
     ];
 
+    // Vẽ biểu đồ sản phẩm bán chạy bằng Plotly
     var data = [{
-    x:xArray,
-    y:yArray,
-    type:"bar"
+        x: xArray,
+        y: yArray,
+        type: "bar"
     }];
 
+    var layout = {
+        title: 'Biểu Đồ Sản Phẩm Bán Chạy'
+    };
 
-    Plotly.newPlot("myPlot", data);
-    </script>
+    Plotly.newPlot("myPlot", data, layout);
+</script>

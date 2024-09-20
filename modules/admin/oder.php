@@ -3,7 +3,8 @@ $data = [
     'pageTitle' => 'Đơn hàng',
     'title' => "Đơn hàng",
     'content' => 'Đơn hàng của  website',
-    'select' => 3
+    'select' => 3,
+    'style'=>'oder'
 ];
 
 layout('header', 'admin', $data);
@@ -103,4 +104,4 @@ layout('header', 'admin', $data);
         </div>
     </div>
 <?php
-layout('footer', 'admin');
+layout('footer','admin',$data);

@@ -5,6 +5,7 @@ $data = [
     'title' => "Tổng quát",
     'content' => 'Chào mừng bạn đến với QNT',
     'select' => 1,
+    'style'=>'views'
 ];
 layout('header', 'admin', $data);
 ?>
@@ -231,4 +232,4 @@ layout('header', 'admin', $data);
         </div>
     </div>
 <?php
-layout('footer', 'admin');
+layout('footer','admin',$data);

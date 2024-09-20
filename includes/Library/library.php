@@ -33,7 +33,7 @@ function disAdmin($note)
         $conn = connectDB();
         global $idCustomer;
         $idCustomer = $_SESSION['user']['id'];
-        $result = $conn->query("SELECT is_admin FROM user WHERE id = " . $idCustomer . "");
+        $result = $conn->query("SELECT isAdmin FROM user WHERE id = " . $idCustomer . "");
         $row = $result->fetch_assoc();
         if ($row['is_admin'] == 1) {
             if ($note == 0) {
@@ -1108,7 +1108,7 @@ function showData()
     if (isset($_POST['editCustomer'])) {
         $conn = connectDB();
         $idCustomer = $_POST['editCustomer'];
-        $result = $conn->query("SELECT * FROM user WHERE idUser='" . $idCustomer . "'");
+        $result = $conn->query("SELECT * FROM user WHERE id='" . $idCustomer . "'");
         if ($result->num_rows > 0) {
             // hiện thị dữ liệu
             $row = $result->fetch_assoc();
@@ -1116,11 +1116,11 @@ function showData()
                 <script type='text/javascript'>
                 document.getElementById('bnt_add_data').innerHTML = 'Cập Nhật';
                 document.getElementById('bnt_add_data').value = 'Cập Nhật';
-                document.getElementById('code__customer').value = '" . $row['idUser'] . "';
-                document.getElementById('name__customer').value = '" . $row['userName'] . "';
+                document.getElementById('code__customer').value = '" . $row['id'] . "';
+                document.getElementById('name__customer').value = '" . $row['username'] . "';
                 document.getElementById('email__customer').value = '" . $row['email'] . "';
                 document.getElementById('role').value = '" . $row['id_role'] . "';
-                document.getElementsByName('inpSpecial')[" . $row['isAdmin'] . "].checked = 'checked';
+                document.getElementsByName('inpSpecial')[" . $row['is_admin'] . "].checked = 'checked';
                 document.querySelector('.title__customer__add').innerText = 'Sửa Thành Viên';
                 document.querySelectorAll('.pass__customer')[0].style.display = 'none';
                 document.querySelector('#pass__customer').disabled = true;

@@ -3,7 +3,8 @@ $data = [
     'pageTitle' => 'Cài đặt',
     'title' => "Cài đặt",
     'content' => 'Cài đặt thông tin website',
-    'select' => 5
+    'select' => 5,
+    'style'=>'setting'
 ];
 layout('header', 'admin', $data);
 if (isPost()) {

@@ -43,22 +43,13 @@ if (!isLogin()) {
     <link rel="stylesheet" type="text/css"
         href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/jquery.mCustomScrollbar.css">
     <!-- Style.css -->
-    <link rel="stylesheet" type="text/css"
-        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/t.css?ver=<?php echo rand(); ?>">
+    <!-- <link rel="stylesheet" type="text/css"
+        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/t.css?ver=<?php echo rand(); ?>"> -->
     <link rel="stylesheet" type="text/css"
         href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style.css?ver=<?php echo rand(); ?>">
     <link rel="stylesheet" type="text/css"
-        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style_setting.css?ver=<?php echo rand(); ?>">
-    <link rel="stylesheet" type="text/css"
-        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style_chart.css?ver=<?php echo rand(); ?>">
-    <link rel="stylesheet" type="text/css"
-        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style_product.css?ver=<?php echo rand(); ?>">
-    <link rel="stylesheet" type="text/css"
-        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style_category.css?ver=<?php echo rand(); ?>">
-    <link rel="stylesheet" type="text/css"
-        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style_comment.css?ver=<?php echo rand(); ?>">
-        <link rel="stylesheet" type="text/css"
-        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style_discount.css?ver=<?php echo rand(); ?>">
+        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE.'/assets/css/style_'.$data['style'].'.css?ver='. rand();?>">
+
 
 </head>
 
@@ -216,7 +207,7 @@ if (!isLogin()) {
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                     <ul class="pcoded-submenu">
-                                        <li class="">
+                                        <li  class=" <?php echo $data['select'] == 2 ? "active" : null; ?>">
                                             <a href="?module=admin&action=product" class="waves-effect waves-dark">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                 <span class="pcoded-mtext">Quản Lý Sản Phẩm</span>
@@ -261,32 +252,9 @@ if (!isLogin()) {
                                     </ul>
                                 </li>
                             </ul>
+                    
                             <ul class="pcoded-item pcoded-left-item">
-                                <li class="pcoded-hasmenu  ">
-                                    <a href="javascript:void(0)" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="fas fa-user"></i><b>BC</b></span>
-                                        <span class="pcoded-mtext">Quản Lý người dùng</span>
-                                        <span class="pcoded-mcaret"></span>
-                                    </a>
-                                    <ul class="pcoded-submenu">
-                                        <li class="">
-                                            <a href="?module=admin&action=product" class="waves-effect waves-dark">
-                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                                                <span class="pcoded-mtext">Danh sách người dùng</span>
-                                                <span class="pcoded-mcaret"></span>
-                                            </a>
-                                        </li>
-                                        <li class=" ">
-                                            <a href="?module=admin&action=category" class="waves-effect waves-dark">
-                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                                                <span class="pcoded-mtext">Thêm người dùng</span>
-                                                <span class="pcoded-mcaret"></span>
-                                            </a>
-                                    </ul>
-                                </li>
-                            </ul>
-                            <ul class="pcoded-item pcoded-left-item">
-                                <li class=" <?php echo $data['select'] == 4 ? "active" : null; ?>">
+                                <li class=" <?php echo $data['select'] == 3 ? "active" : null; ?>">
                                     <a href="?module=admin&action=oder" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fas fa-truck"></i><b>C</b></span>
                                         <span class="pcoded-mtext">Đơn Hàng</span>
@@ -296,7 +264,7 @@ if (!isLogin()) {
                             </ul>
 
                             <ul class="pcoded-item pcoded-left-item">
-                                <li class=" <?php echo $data['select'] == 5 ? "active" : null; ?>">
+                                <li class=" <?php echo $data['select'] == 4 ? "active" : null; ?>">
                                     <a href="?module=admin&action=statis" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-bar-chart-alt"></i><b>C</b></span>
                                         <span class="pcoded-mtext">Thống Kê</span>
@@ -305,7 +273,7 @@ if (!isLogin()) {
                                 </li>
                             </ul>
                             <ul class="pcoded-item pcoded-left-item">
-                                <li class=" <?php echo $data['select'] == 6 ? "active" : null; ?>">
+                                <li class=" <?php echo $data['select'] == 5 ? "active" : null; ?>">
                                     <a href="?module=admin&action=setting" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fas fa-cogs"></i><b>FC</b></span>
                                         <span class="pcoded-mtext">Cài Đặt</span>
