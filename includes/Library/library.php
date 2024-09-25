@@ -33,7 +33,7 @@ function disAdmin($note)
         $conn = connectDB();
         global $idCustomer;
         $idCustomer = $_SESSION['user']['id'];
-        $result = $conn->query("SELECT isAdmin FROM user WHERE id = " . $idCustomer . "");
+        $result = $conn->query("SELECT is_admin FROM user WHERE id = " . $idCustomer . "");
         $row = $result->fetch_assoc();
         if ($row['is_admin'] == 1) {
             if ($note == 0) {
@@ -79,10 +79,10 @@ function disAvata()
 {
     if (isset($_SESSION['user'])) {
         $conn = connectDB();
-        $idCustomer = $_SESSION['user']['idUser'];
+        $idCustomer = $_SESSION['user']['id'];
         $result = $conn->query("SELECT userName,image FROM user WHERE idUser = " . $idCustomer . "");
         $row = $result->fetch_assoc();
-        echo '<img src="../images/avata/' . $row['image'] . '" class = "avata_comment_top" alt="">';
+        echo '<img src="'._WEB_HOST_TEMPLATE.'/images/avata/' . $row['image'] . '" class = "avata_comment_top" alt="">';
     }
 }
 
@@ -92,11 +92,9 @@ function disLogin($note)
     if (isset($_SESSION['user'])) {
         $conn = connectDB();
         $idCustomer = $_SESSION['user']['id'];
-        $result = $conn->query("SELECT username,image FROM user WHERE id = " . $idCustomer . "");
+        $result = $conn->query("SELECT * FROM user WHERE id = " . $idCustomer . "");
 //        $row = getRaw("SELECT userName,image FROM user WHERE idUser = " . $idCustomer . "");
         $row = $result->fetch_assoc();
-        var_dump($row);
-
         if ($note == 0) {
             echo '
             <span class="showUser">
@@ -110,7 +108,7 @@ function disLogin($note)
                   <li><a href="./UserManager/order.php">Đơn Hàng</a></li>
                   <li><a href="./UserManager/historyOrder.php">Lịch Sử Mua Hàng</a></li>
                   <li><a href="./UserManager/settingUser.php">Tài Khoản</a></li>
-                  <li><a class="disMobl" href="./Login/logout.php">Đăng Xuất</a></li>
+                  <li><a class="disMobl" href="?module=auth&action=logout">Đăng Xuất</a></li>
                 </ul>
               </div>
             </span>
@@ -119,16 +117,15 @@ function disLogin($note)
             echo '
                 <span class="showUser">
               <div class="user__name" onclick="showNavUser()">
-                <img src ="../images/avata/' . $row['image'] . '" class="img__avatar">
-                <span class="userName">' . $row['usermame'] . '</span>
+                <img src ="'._WEB_HOST_TEMPLATE.'/images/avata/' . $row['image'] . '" class="img__avatar">
+                <span class="userName">' . $row['fullname'] . '</span>
                 <i class="fas icon_down_user">&#xf107;</i>
               </div>
               <div class="show__nav__user">
                 <ul>
-                  <li><a href="../UserManager/order.php">Đơn Hàng</a></li>
-                  <li><a href="../UserManager/historyOrder.php">Lịch Sử Mua Hàng</a></li>
-                  <li><a href="../UserManager/settingUser.php">Tài Khoản</a></li>
-                  <li><a href="../Login/logout.php">Đăng Xuất</a></li>
+                  <li><a href="?module=admin&action=oder">Đơn Hàng</a></li>
+                  <li><a href="?module=admin&action=setting">Tài Khoản</a></li>
+                  <li><a href="?module=auth&action=logout">Đăng Xuất</a></li>
                 </ul>
               </div>
             </span>

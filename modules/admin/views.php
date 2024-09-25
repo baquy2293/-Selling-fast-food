@@ -46,6 +46,8 @@ layout('header', 'admin', $data);
                                                 </div>
                                                 <div class="col-8 p-l-0">
                                                     <?php
+                                                    // $result = getRows('SELECT * FROM feedback');
+                                    
                                                     echo '
                                                                                 <h5>6</h5>
                                                                                 <p class="text-muted m-b-0">images</p>

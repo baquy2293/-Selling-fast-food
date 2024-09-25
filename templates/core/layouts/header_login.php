@@ -1,3 +1,8 @@
+<?php 
+
+if(isLogin()!=false){
+redirect('?module=home&action=views');}
+?>
 <!DOCTYPE html>
 <html lang="en">
 

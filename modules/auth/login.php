@@ -17,13 +17,14 @@ if (isPost()) {
             if (password_verify($password, $passWordHash)) {
                 if ($userQuery['disabled'] == 0) {
                     $_SESSION['user'] = $userQuery;
-                    if ($userQuery['is_role'] == 0) {
-                        redirect("?module=admin&action=views");
-                    } elseif ($userQuery['is_admin'] == 1) {
-                        redirect("?module=staff&action=views");
-                    } else {
-                        redirect("?module=client&action=views");
-                    }
+                    // if ($userQuery['is_role'] == 0) {
+                    //     redirect("?module=admin&action=views");
+                    // } elseif ($userQuery['is_admin'] == 1) {
+                    //     redirect("?module=staff&action=views");
+                    // } else {
+                    //     redirect("?module=client&action=views");
+                    // }
+                redirect('?module=home&action=views');
                 } else {
                     setFlashData("msg", "Tài khoản của bạn đang bị đình chỉ hãy liên hệ với quản trị viên để mở khóa");
                 }

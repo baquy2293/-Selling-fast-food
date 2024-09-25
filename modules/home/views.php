@@ -248,7 +248,6 @@ layout('header', 'core');
                         <?php
                         $conn = connectDB();
                         $result = $conn->query("SELECT * FROM category");
-                        var_dump($result);
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 echo '<a href="?module=product&action=&idML=' . $row['id'] . '" class="linkCategory">

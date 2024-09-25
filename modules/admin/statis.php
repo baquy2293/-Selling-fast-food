@@ -4,7 +4,7 @@ $data = [
     'title' => "Thống kê",
     'content' => 'Thống kê dữ liệu website',
     'select' => 4,
-    'style'=>'static'
+    'style' => 'static'
 ];
 layout('header', 'admin', $data);
 ?>
@@ -17,12 +17,14 @@ layout('header', 'admin', $data);
                     <!-- Area Chart start -->
                     <div class="chart_item">
                         <h2>Thống Kê Số Lượng Hàng Hóa Của Từng Loại Sản Phẩm</h2>
-                        <div id="myChart_category" style="width:100%; max-width:600px; height:600px; margin: auto;"></div>
+                        <div id="myChart_category" style="width:100%; max-width:600px; height:600px; margin: auto;">
+                        </div>
                     </div>
                     <!-- chart_item -->
                     <div class="chart_item">
                         <h2>Thống Kê Doanh Thu Theo Tháng</h2>
-                        <div id="myCharRevenue" style="width:100%; max-width:600px; height:600px; margin: 0 200px;"></div>
+                        <div id="myCharRevenue" style="width:100%; max-width:600px; height:600px; margin: 0 200px;">
+                        </div>
                     </div>
                     <!-- chart_item -->
                     <div class="chart_item">
@@ -37,7 +39,7 @@ layout('header', 'admin', $data);
 </div>
 
 <?php
-layout('footer','admin',$data);
+layout('footer', 'admin', $data);
 
 ?>
 <?php
@@ -50,13 +52,15 @@ $result_category = $conn->query("SELECT COUNT(id) AS 'SL', category.nameCategory
                                  GROUP BY category.nameCategory");
 
 // Lấy dữ liệu thống kê doanh thu theo tháng
-$result_revenue = $conn->query("SELECT (SUM(OD.price * OD.qty) + O.feeShip) AS 'tongtien', MONTH(O.dateOrder) AS 'thang', YEAR(O.dateOrder) AS 'nam' 
-                                FROM orderr O 
-                                INNER JOIN oderdetail OD 
-                                ON O.id_oderDetail = OD.id_oderDetail 
-                                WHERE O.status = 5 
-                                AND YEAR(O.dateOrder) = 2021 
-                                GROUP BY MONTH(O.dateOrder)");
+$result_revenue = $conn->query("SELECT (SUM(OD.price * OD.qty) + SUM(O.feeShip)) AS 'tongtien', 
+           MONTH(O.dateOrder) AS 'thang', 
+           YEAR(O.dateOrder) AS 'nam' 
+    FROM orderr O 
+    INNER JOIN oderdetail OD 
+    ON O.id_oderDetail = OD.id_oderDetail 
+    WHERE O.status = 5 
+    AND YEAR(O.dateOrder) = 2021 
+    GROUP BY MONTH(O.dateOrder), YEAR(O.dateOrder)");
 
 // Lấy dữ liệu thống kê sản phẩm bán chạy
 $result_top_products = $conn->query("SELECT COUNT(oderdetail.id_product) AS 'SLSP', product.nameProduct 
@@ -70,7 +74,9 @@ $conn->close();
 
 <script>
     // Load Google Charts cho cả hai biểu đồ
-    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.load('current', {
+        'packages': ['corechart']
+    });
     google.charts.setOnLoadCallback(drawCharts);
 
     function drawCharts() {
@@ -82,10 +88,10 @@ $conn->close();
     function drawChartCategory() {
         var data = google.visualization.arrayToDataTable([
             ['Đồ Uống', 'Số Sản Phẩm'],
-            <?php 
-                while ($row = $result_category->fetch_assoc()) {
-                    echo "['".$row['nameCategory']."', ".$row['SL']."],";
-                }
+            <?php
+            while ($row = $result_category->fetch_assoc()) {
+                echo "['" . $row['nameCategory'] . "', " . $row['SL'] . "],";
+            }
             ?>
         ]);
 
@@ -102,10 +108,10 @@ $conn->close();
     function drawChartRevenue() {
         var data = google.visualization.arrayToDataTable([
             ['Tháng', 'Doanh Thu'],
-            <?php 
-                while ($row = $result_revenue->fetch_assoc()) {
-                    echo "['Tháng ".$row['thang']."', ".$row['tongtien']."],";
-                }
+            <?php
+            while ($row = $result_revenue->fetch_assoc()) {
+                echo "['Tháng " . $row['thang'] . "', " . $row['tongtien'] . "],";
+            }
             ?>
         ]);
 
@@ -122,18 +128,18 @@ $conn->close();
 <script>
     // Dữ liệu cho biểu đồ sản phẩm bán chạy
     var xArray = [
-        <?php 
-            while ($row = $result_top_products->fetch_assoc()) {
-                echo '"'.$row['nameProduct'].'",';
-            }
+        <?php
+        while ($row = $result_top_products->fetch_assoc()) {
+            echo '"' . $row['nameProduct'] . '",';
+        }
         ?>
     ];
     var yArray = [
-        <?php 
-            $result_top_products->data_seek(0);  // Quay lại từ đầu kết quả
-            while ($row = $result_top_products->fetch_assoc()) {
-                echo $row['SLSP'].',';
-            }
+        <?php
+        $result_top_products->data_seek(0);  // Quay lại từ đầu kết quả
+        while ($row = $result_top_products->fetch_assoc()) {
+            echo $row['SLSP'] . ',';
+        }
         ?>
     ];
 

@@ -22,7 +22,7 @@ layout('header', 'admin', $data);
                                           <!-- end code__category -->
                                           <div class="form__group name__category">
                                             <label for="">Đường Dẫn: </label>
-                                            <input type="text" id="nameCategory" class="valInp" name="nameCategory" required />
+                                            <input type="text" id="nameCategory" class="valInp" name="nameCategory" />
                                           </div>
                                           <!-- end name__category -->
                                           <div class="form__group img__category">
@@ -46,8 +46,8 @@ layout('header', 'admin', $data);
                                             $nameCategory = $_POST['nameCategory'];
                                             $nameIMG = $_FILES['fileCategory']['name'];
                                             $tmp_name = $_FILES['fileCategory']['tmp_name'];
-                                            move_uploaded_file($tmp_name, "../../images/". $nameIMG);
-                                            $sql = "INSERT INTO slide VALUES ('null','$nameIMG','$nameCategory')";
+                                            move_uploaded_file($tmp_name, "D:/laragon/btl/Sellingfastfood/templates/images/slide/". $nameIMG);
+                                            $sql = "INSERT INTO slide (image, link ) VALUES ('$nameIMG','$nameCategory')";
                                             if ($conn->query($sql)) {
                                                 echo "Bạn Đã Thêm Thành Công !";
                                             } else {

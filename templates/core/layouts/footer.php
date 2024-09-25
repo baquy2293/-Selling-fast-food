@@ -46,3 +46,53 @@
     </div>
     <script src="<?php echo _WEB_HOST_CORE_TEMPLATE; ?>/assets/style_js.js"></script>
 </footer>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="./Home/owl.carousel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
+<script>
+    $(".owl-carousel").owlCarousel({
+        loop: true,
+        margin: 100,
+        nav: true,
+        responsive: {
+            0: {
+                items: 1,
+            },
+            600: {
+                items: 3,
+            },
+            1000: {
+                items: 5,
+            },
+        },
+    });
+</script>
+<script>
+    function viewport() {
+        var e = window,
+            a = 'inner';
+        if (!('innerWidth' in window)) {
+            a = 'client';
+            e = document.documentElement || document.body;
+        }
+        if (e[a + 'Width'] <= 768) {
+            bannerMobile[0].src = "<?php echo _WEB_HOST_TEMPLATE ?>/images/banner-mobile001.jpg"
+            bannerMobile[1].src = "<?php echo _WEB_HOST_TEMPLATE ?>/images/banner-mobile002.jpg"
+            bannerMobile[2].src = "<?php echo _WEB_HOST_TEMPLATE ?>/images/banner-mobile001.jpg"
+        }
+        if (e[a + 'Width'] > 768) {
+            <?php
+            $conn = connectDB();
+            $result = $conn->query("SELECT * FROM slide ");
+            $i = 0;
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo 'bannerMobile[' . $i++ . '].src = "'._WEB_HOST_TEMPLATE.'/images/' . $row['image'] . '";';
+                }
+            }
+            ?>
+        }
+    }
+</script>

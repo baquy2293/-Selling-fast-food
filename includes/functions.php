@@ -188,16 +188,17 @@ function old($fieldName, $oldData, $default = null)
 
 //Kiểm tra trạng thái đăng nhập
 function isLogin()
-{
-    $checkLogin = false;
-
+{    
     if (!empty(getSession('user'))) {
-        return true;
+        $check = $_SESSION['user']['is_admin'];
+        if ($check=='1') {
+            return 'admin';
+        }else{
+            return 'client';
+        }
     } else {
         return false;
     }
-
-    return $checkLogin;
 }
 
 //Tự động xoá token login đếu đăng xuất
