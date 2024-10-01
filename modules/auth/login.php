@@ -19,9 +19,9 @@ if (isPost() ) {
                 if ($userQuery['disabled'] == 0) {
                     $_SESSION['user'] = $userQuery;
                     if ($userQuery['is_role'] == 1) {
-                        redirect("?module=admin&action=views");
+                        redirect("?module=home&action=views");
                     } else {
-                        redirect("?module=client&action=views");
+                        redirect("?module=home&action=views");
                     }
                 } else {
                     setFlashData("msg", "Tài khoản của bạn đang bị đình chỉ hãy liên hệ với quản trị viên để mở khóa");
