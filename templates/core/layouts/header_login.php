@@ -19,7 +19,7 @@ redirect('?module=home&action=views');}
             --text-color: #157332;
         }
     </style>
-    <link rel="stylesheet" href="<?php echo _WEB_HOST_CORE_TEMPLATE ?>/assets/styleNem.css">
+    <link rel="stylesheet" href="<?php echo _WEB_HOST_CORE_TEMPLATE ?>/assets/css/styleNem.css?ver=<?php echo rand()?>">
     <script src="https://kit.fontawesome.com/9238eff31b.js" crossorigin="anonymous"></script>
 
 </head>

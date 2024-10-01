@@ -3,8 +3,9 @@ $data = [
     'pageTitle' => 'Đăng nhập hệ thống'
 ];
 layout('header_login', 'core', $data);
+$token = md5(time());
 
-if (isPost()) {
+if (isPost() ) {
     $body = getBody();
 
     if (!empty(trim($body['email'])) && !empty(trim($body['password']))) {
@@ -17,14 +18,11 @@ if (isPost()) {
             if (password_verify($password, $passWordHash)) {
                 if ($userQuery['disabled'] == 0) {
                     $_SESSION['user'] = $userQuery;
-                    // if ($userQuery['is_role'] == 0) {
-                    //     redirect("?module=admin&action=views");
-                    // } elseif ($userQuery['is_admin'] == 1) {
-                    //     redirect("?module=staff&action=views");
-                    // } else {
-                    //     redirect("?module=client&action=views");
-                    // }
-                redirect('?module=home&action=views');
+                    if ($userQuery['is_role'] == 1) {
+                        redirect("?module=admin&action=views");
+                    } else {
+                        redirect("?module=client&action=views");
+                    }
                 } else {
                     setFlashData("msg", "Tài khoản của bạn đang bị đình chỉ hãy liên hệ với quản trị viên để mở khóa");
                 }
@@ -41,47 +39,50 @@ if (isPost()) {
 
 }
 $msg = getFlashData('msg');
-
 ?>
+
 <body>
-<div class="container">
-    <header>
-        <div class="logo">
-            <?php logo(0); ?>
-        </div>
-    </header>
-    <main>
-        <form action="" name="mf" id="formLG" method="post" onsubmit="return checkLogin()">
-            <h1>Đăng Nhập</h1>
-            <div class="username">
-                <label for=""><i class="fas fa-envelope"></i></label>
-                <input type="text" id="email" name="email" placeholder="Nhập Email">
+    <div class="container">
+        <header>
+            <div class="logo">
+                <?php logo(0); ?>
             </div>
-            <div class="password">
-                <label for=""><i class="fas fa-lock"></i></label>
-                <input type="passWord" id="valpassWord" name="password" placeholder="Nhập Mật Khẩu">
-            </div>
-            <br>
-            <div class="register">
-                <span>Bạn Chưa Có Tài Khoản ?</span>
+        </header>
+        <main>
+            <form action="" name="mf" id="formLG" method="post">
+                <h1>Đăng Nhập</h1>
+                <div class="username">
+                    <label for=""><i class="fas fa-envelope"></i></label>
+                    <input type="text" id="email" name="email" placeholder="Nhập Email">
+                </div>
+                <div class="password">
+                    <label for=""><i class="fas fa-lock"></i></label>
+                    <input type="passWord" id="valpassWord" name="password" placeholder="Nhập Mật Khẩu">
+                </div>
+             
                 <br>
-                <span><a href="?module=auth&action=register" style="color: #0af9d7">Tạo Tài Khoản</a></span>
-            </div>
+                <div class="register">
+                    <span>Bạn Chưa Có Tài Khoản ?</span>
+                    <br>
+                    <span><a href="?module=auth&action=register" style="color: #0af9d7">Tạo Tài Khoản</a></span>
+                </div>
 
-            <div class="forgot">
-                <span>Bạn Quên Mật Khẩu Tài Khoản ?</span>
-                <span><a href="?module=auth&action=forgot" style="color: #0af9d7">Quên mật khẩu</a></span>
-            </div>
-            <div class="submit">
-                <input type="submit" name="bnt-submit" value="Đăng Nhập">
-            </div>
-            <span id="disError">
-                      <?php echo $msg ?>
-                                </span>
-        </form>
-    </main>
-</div>
+                <div class="forgot">
+                    <span>Bạn Quên Mật Khẩu Tài Khoản ?</span>
+                    <span><a href="?module=auth&action=forgot" style="color: #0af9d7">Quên mật khẩu</a></span>
+                </div>
+                <div class="submit">
+                    <input type="submit" name="bnt-submit" value="Đăng Nhập">
+                </div>
+                <span id="disError">
+                    <?php echo $msg ?>
+                </span>
+                <input type="hidden" name="_token" value="<?php echo $toekn; ?>">
+                <?php $_SESSION['_token']= $token ;?>
+            </form>
+        </main>
+    </div>
 
-<?php
+    <?php
 layout('footer_login', 'core');
 ?>

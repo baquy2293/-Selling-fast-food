@@ -1,8 +1,5 @@
 <?php
-
 $checklogin = isLogin();
-
-var_dump($checklogin);
 
 if ($checklogin != 'admin') {
     redirect('?module=auth&action=login');
