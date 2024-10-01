@@ -5,6 +5,7 @@ $data = [
     'title' => "Tổng quát",
     'content' => 'Chào mừng bạn đến với QNT',
     'select' => 1,
+    'style'=>'views'
 ];
 layout('header', 'admin', $data);
 ?>
@@ -45,6 +46,8 @@ layout('header', 'admin', $data);
                                                 </div>
                                                 <div class="col-8 p-l-0">
                                                     <?php
+                                                    // $result = getRows('SELECT * FROM feedback');
+                                    
                                                     echo '
                                                                                 <h5>6</h5>
                                                                                 <p class="text-muted m-b-0">images</p>
@@ -231,4 +234,4 @@ layout('header', 'admin', $data);
         </div>
     </div>
 <?php
-layout('footer', 'admin');
+layout('footer','admin',$data);

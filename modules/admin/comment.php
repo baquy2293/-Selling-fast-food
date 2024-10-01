@@ -3,7 +3,8 @@ $data = [
     'pageTitle' => 'Cài đặt',
     'title' => "Cài đặt",
     'content' => 'Cài đặt thông tin website',
-    'select' => 2
+    'select' => 2,
+    'style'=>'comment'
 ];
 layout('header', 'admin', $data);
 

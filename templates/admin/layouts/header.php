@@ -1,7 +1,10 @@
 <?php
-if (!isLogin()) {
+$checklogin = isLogin();
+
+if ($checklogin != 'admin') {
     redirect('?module=auth&action=login');
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -43,22 +46,13 @@ if (!isLogin()) {
     <link rel="stylesheet" type="text/css"
         href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/jquery.mCustomScrollbar.css">
     <!-- Style.css -->
-    <link rel="stylesheet" type="text/css"
-        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/t.css?ver=<?php echo rand(); ?>">
+    <!-- <link rel="stylesheet" type="text/css"
+        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/t.css?ver=<?php echo rand(); ?>"> -->
     <link rel="stylesheet" type="text/css"
         href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style.css?ver=<?php echo rand(); ?>">
     <link rel="stylesheet" type="text/css"
-        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style_setting.css?ver=<?php echo rand(); ?>">
-    <link rel="stylesheet" type="text/css"
-        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style_chart.css?ver=<?php echo rand(); ?>">
-    <link rel="stylesheet" type="text/css"
-        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style_product.css?ver=<?php echo rand(); ?>">
-    <link rel="stylesheet" type="text/css"
-        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style_category.css?ver=<?php echo rand(); ?>">
-    <link rel="stylesheet" type="text/css"
-        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style_comment.css?ver=<?php echo rand(); ?>">
-        <link rel="stylesheet" type="text/css"
-        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/css/style_discount.css?ver=<?php echo rand(); ?>">
+        href="<?php echo _WEB_HOST_ADMIN_TEMPLATE . '/assets/css/style_' . $data['style'] . '.css?ver=' . rand(); ?>">
+
 
 </head>
 
@@ -205,114 +199,91 @@ if (!isLogin()) {
                                     </a>
                                 </li>
                             </ul>
-                            <?php 
-                            if ($_SESSION['user']['is_admin'] == 0) { ?>
+                            <?php
+                            if ($_SESSION['user']['is_admin'] == 1) { ?>
 
-                            <ul class="pcoded-item pcoded-left-item">
-                                <li class="pcoded-hasmenu  ">
-                                    <a href="javascript:void(0)" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="ti-layout-grid2-alt"></i><b>BC</b></span>
-                                        <span class="pcoded-mtext">Quản Lý Hệ Thống</span>
-                                        <span class="pcoded-mcaret"></span>
-                                    </a>
-                                    <ul class="pcoded-submenu">
-                                        <li class="">
-                                            <a href="?module=admin&action=product" class="waves-effect waves-dark">
-                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                                                <span class="pcoded-mtext">Quản Lý Sản Phẩm</span>
-                                                <span class="pcoded-mcaret"></span>
-                                            </a>
-                                        </li>
-                                        <li class=" ">
-                                            <a href="?module=admin&action=category" class="waves-effect waves-dark">
-                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                                                <span class="pcoded-mtext">Quản Lý Loại Sản Phẩm</span>
-                                                <span class="pcoded-mcaret"></span>
-                                            </a>
-                                        </li>
-                                        <li class="">
-                                            <a href="?module=admin&action=customer" class="waves-effect waves-dark">
-                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                                                <span class="pcoded-mtext">Quản Lý Khách Hàng</span>
-                                                <span class="pcoded-mcaret"></span>
-                                            </a>
-                                        </li>
-                                        <li class=" ">
-                                            <a href="?module=admin&action=comment" class="waves-effect waves-dark">
-                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                                                <span class="pcoded-mtext">Quản Lý Bình Luận</span>
-                                                <span class="pcoded-mcaret"></span>
-                                            </a>
-                                        </li>
-                                        <li class=" ">
-                                            <a href="?module=admin&action=slider" class="waves-effect waves-dark">
-                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                                                <span class="pcoded-mtext">Quản Trị Slider</span>
-                                                <span class="pcoded-mcaret"></span>
-                                            </a>
-                                        </li>
-                                        <li class="">
-                                            <a href="?module=admin&action=discount" class="waves-effect waves-dark">
-                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                                                <span class="pcoded-mtext">Quản trị mã giảm giá</span>
-                                                <span class="pcoded-mcaret"></span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                            <ul class="pcoded-item pcoded-left-item">
-                                <li class="pcoded-hasmenu  ">
-                                    <a href="javascript:void(0)" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="fas fa-user"></i><b>BC</b></span>
-                                        <span class="pcoded-mtext">Quản Lý người dùng</span>
-                                        <span class="pcoded-mcaret"></span>
-                                    </a>
-                                    <ul class="pcoded-submenu">
-                                        <li class="">
-                                            <a href="?module=admin&action=product" class="waves-effect waves-dark">
-                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                                                <span class="pcoded-mtext">Danh sách người dùng</span>
-                                                <span class="pcoded-mcaret"></span>
-                                            </a>
-                                        </li>
-                                        <li class=" ">
-                                            <a href="?module=admin&action=category" class="waves-effect waves-dark">
-                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                                                <span class="pcoded-mtext">Thêm người dùng</span>
-                                                <span class="pcoded-mcaret"></span>
-                                            </a>
-                                    </ul>
-                                </li>
-                            </ul>
-                            <ul class="pcoded-item pcoded-left-item">
-                                <li class=" <?php echo $data['select'] == 4 ? "active" : null; ?>">
-                                    <a href="?module=admin&action=oder" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="fas fa-truck"></i><b>C</b></span>
-                                        <span class="pcoded-mtext">Đơn Hàng</span>
-                                        <span class="pcoded-mcaret"></span>
-                                    </a>
-                                </li>
-                            </ul>
+                                <ul class="pcoded-item pcoded-left-item">
+                                    <li class="pcoded-hasmenu  ">
+                                        <a href="javascript:void(0)" class="waves-effect waves-dark">
+                                            <span class="pcoded-micon"><i class="ti-layout-grid2-alt"></i><b>BC</b></span>
+                                            <span class="pcoded-mtext">Quản Lý Hệ Thống</span>
+                                            <span class="pcoded-mcaret"></span>
+                                        </a>
+                                        <ul class="pcoded-submenu">
+                                            <li class=" <?php echo $data['select'] == 2 ? "active" : null; ?>">
+                                                <a href="?module=admin&action=product" class="waves-effect waves-dark">
+                                                    <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                    <span class="pcoded-mtext">Quản Lý Sản Phẩm</span>
+                                                    <span class="pcoded-mcaret"></span>
+                                                </a>
+                                            </li>
+                                            <li class=" ">
+                                                <a href="?module=admin&action=category" class="waves-effect waves-dark">
+                                                    <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                    <span class="pcoded-mtext">Quản Lý Loại Sản Phẩm</span>
+                                                    <span class="pcoded-mcaret"></span>
+                                                </a>
+                                            </li>
+                                            <li class="">
+                                                <a href="?module=admin&action=customer" class="waves-effect waves-dark">
+                                                    <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                    <span class="pcoded-mtext">Quản Lý Khách Hàng</span>
+                                                    <span class="pcoded-mcaret"></span>
+                                                </a>
+                                            </li>
+                                            <li class=" ">
+                                                <a href="?module=admin&action=comment" class="waves-effect waves-dark">
+                                                    <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                    <span class="pcoded-mtext">Quản Lý Bình Luận</span>
+                                                    <span class="pcoded-mcaret"></span>
+                                                </a>
+                                            </li>
+                                            <li class=" ">
+                                                <a href="?module=admin&action=slider" class="waves-effect waves-dark">
+                                                    <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                    <span class="pcoded-mtext">Quản Trị Slider</span>
+                                                    <span class="pcoded-mcaret"></span>
+                                                </a>
+                                            </li>
+                                            <li class="">
+                                                <a href="?module=admin&action=discount" class="waves-effect waves-dark">
+                                                    <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                    <span class="pcoded-mtext">Quản trị mã giảm giá</span>
+                                                    <span class="pcoded-mcaret"></span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
 
-                            <ul class="pcoded-item pcoded-left-item">
-                                <li class=" <?php echo $data['select'] == 5 ? "active" : null; ?>">
-                                    <a href="?module=admin&action=statis" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="ti-bar-chart-alt"></i><b>C</b></span>
-                                        <span class="pcoded-mtext">Thống Kê</span>
-                                        <span class="pcoded-mcaret"></span>
-                                    </a>
-                                </li>
-                            </ul>
-                            <ul class="pcoded-item pcoded-left-item">
-                                <li class=" <?php echo $data['select'] == 6 ? "active" : null; ?>">
-                                    <a href="?module=admin&action=setting" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="fas fa-cogs"></i><b>FC</b></span>
-                                        <span class="pcoded-mtext">Cài Đặt</span>
-                                        <span class="pcoded-mcaret"></span>
-                                    </a>
-                                </li>
-                            </ul>
+                                <ul class="pcoded-item pcoded-left-item">
+                                    <li class=" <?php echo $data['select'] == 3 ? "active" : null; ?>">
+                                        <a href="?module=admin&action=oder" class="waves-effect waves-dark">
+                                            <span class="pcoded-micon"><i class="fas fa-truck"></i><b>C</b></span>
+                                            <span class="pcoded-mtext">Đơn Hàng</span>
+                                            <span class="pcoded-mcaret"></span>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                                <ul class="pcoded-item pcoded-left-item">
+                                    <li class=" <?php echo $data['select'] == 4 ? "active" : null; ?>">
+                                        <a href="?module=admin&action=statis" class="waves-effect waves-dark">
+                                            <span class="pcoded-micon"><i class="ti-bar-chart-alt"></i><b>C</b></span>
+                                            <span class="pcoded-mtext">Thống Kê</span>
+                                            <span class="pcoded-mcaret"></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <ul class="pcoded-item pcoded-left-item">
+                                    <li class=" <?php echo $data['select'] == 5 ? "active" : null; ?>">
+                                        <a href="?module=admin&action=setting" class="waves-effect waves-dark">
+                                            <span class="pcoded-micon"><i class="fas fa-cogs"></i><b>FC</b></span>
+                                            <span class="pcoded-mtext">Cài Đặt</span>
+                                            <span class="pcoded-mcaret"></span>
+                                        </a>
+                                    </li>
+                                </ul>
                             <?php } ?>
                         </div>
                     </nav>

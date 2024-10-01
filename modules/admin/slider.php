@@ -3,7 +3,8 @@ $data = [
     'pageTitle' => 'Cài đặt',
     'title' => "Cài đặt",
     'content' => 'Cài đặt thông tin website',
-    'select' => 2
+    'select' => 2,
+    'style'=>'slider'
 ];
 layout('header', 'admin', $data);
 
@@ -21,7 +22,7 @@ layout('header', 'admin', $data);
                                           <!-- end code__category -->
                                           <div class="form__group name__category">
                                             <label for="">Đường Dẫn: </label>
-                                            <input type="text" id="nameCategory" class="valInp" name="nameCategory" required />
+                                            <input type="text" id="nameCategory" class="valInp" name="nameCategory" />
                                           </div>
                                           <!-- end name__category -->
                                           <div class="form__group img__category">
@@ -45,8 +46,8 @@ layout('header', 'admin', $data);
                                             $nameCategory = $_POST['nameCategory'];
                                             $nameIMG = $_FILES['fileCategory']['name'];
                                             $tmp_name = $_FILES['fileCategory']['tmp_name'];
-                                            move_uploaded_file($tmp_name, "../../images/". $nameIMG);
-                                            $sql = "INSERT INTO slide VALUES ('null','$nameIMG','$nameCategory')";
+                                            move_uploaded_file($tmp_name, "D:/laragon/btl/Sellingfastfood/templates/images/slide/". $nameIMG);
+                                            $sql = "INSERT INTO slide (image, link ) VALUES ('$nameIMG','$nameCategory')";
                                             if ($conn->query($sql)) {
                                                 echo "Bạn Đã Thêm Thành Công !";
                                             } else {
@@ -89,7 +90,7 @@ layout('header', 'admin', $data);
                                                         <tr>
                                                             <td><input type="checkbox" name="checkbox[]" value = "'.$row['id_silde'].'"/></td>
                                                             <td>'.$row['id_silde'].'</td>
-                                                            <td class="show__list__img" ><img src="../../images/'.$row['image'].'"></td>
+                                                            <td class="show__list__img" ><img src="'._WEB_HOST_TEMPLATE.'/images/'.$row['image'].'"></td>
                                                             <td>'.$row['link'].'</td>
                                                             <td class="box__bnt">
                                                             <button class="bnt__category category__edit" name ="editSilde" value="'.$row['id_silde'].'">Sửa</button>

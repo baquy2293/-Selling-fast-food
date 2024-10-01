@@ -79,10 +79,10 @@ function disAvata()
 {
     if (isset($_SESSION['user'])) {
         $conn = connectDB();
-        $idCustomer = $_SESSION['user']['idUser'];
-        $result = $conn->query("SELECT userName,image FROM user WHERE idUser = " . $idCustomer . "");
+        $idCustomer = $_SESSION['user']['id'];
+        $result = $conn->query("SELECT username,image FROM user WHERE id = " . $idCustomer . "");
         $row = $result->fetch_assoc();
-        echo '<img src="../images/avata/' . $row['image'] . '" class = "avata_comment_top" alt="">';
+        echo '<img src="'._WEB_HOST_TEMPLATE.'/images/avata/' . $row['image'] . '" class = "avata_comment_top" alt="">';
     }
 }
 
@@ -92,11 +92,9 @@ function disLogin($note)
     if (isset($_SESSION['user'])) {
         $conn = connectDB();
         $idCustomer = $_SESSION['user']['id'];
-        $result = $conn->query("SELECT username,image FROM user WHERE id = " . $idCustomer . "");
+        $result = $conn->query("SELECT * FROM user WHERE id = " . $idCustomer . "");
 //        $row = getRaw("SELECT userName,image FROM user WHERE idUser = " . $idCustomer . "");
         $row = $result->fetch_assoc();
-        var_dump($row);
-
         if ($note == 0) {
             echo '
             <span class="showUser">
@@ -107,10 +105,10 @@ function disLogin($note)
               </div>
               <div class="show__nav__user">
                 <ul>
-                  <li><a href="./UserManager/order.php">Đơn Hàng</a></li>
-                  <li><a href="./UserManager/historyOrder.php">Lịch Sử Mua Hàng</a></li>
-                  <li><a href="./UserManager/settingUser.php">Tài Khoản</a></li>
-                  <li><a class="disMobl" href="./Login/logout.php">Đăng Xuất</a></li>
+                  <li><a href="?module=admin&action=oder">Đơn Hàng</a></li>
+                  <li><a href="?module=admin&action=oder">Lịch Sử Mua Hàng</a></li>
+                  <li><a href="?module=user&action=setting">Tài Khoản</a></li>
+                  <li><a class="disMobl" href="?module=auth&action=logout">Đăng Xuất</a></li>
                 </ul>
               </div>
             </span>
@@ -119,16 +117,15 @@ function disLogin($note)
             echo '
                 <span class="showUser">
               <div class="user__name" onclick="showNavUser()">
-                <img src ="../images/avata/' . $row['image'] . '" class="img__avatar">
-                <span class="userName">' . $row['usermame'] . '</span>
+                <img src ="'._WEB_HOST_TEMPLATE.'/images/avata/' . $row['image'] . '" class="img__avatar">
+                <span class="userName">' . $row['fullname'] . '</span>
                 <i class="fas icon_down_user">&#xf107;</i>
               </div>
               <div class="show__nav__user">
                 <ul>
-                  <li><a href="../UserManager/order.php">Đơn Hàng</a></li>
-                  <li><a href="../UserManager/historyOrder.php">Lịch Sử Mua Hàng</a></li>
-                  <li><a href="../UserManager/settingUser.php">Tài Khoản</a></li>
-                  <li><a href="../Login/logout.php">Đăng Xuất</a></li>
+                  <li><a href="?module=admin&action=oder">Đơn Hàng</a></li>
+                  <li><a href="?module=user&action=setting">Tài Khoản</a></li>
+                  <li><a href="?module=auth&action=logout">Đăng Xuất</a></li>
                 </ul>
               </div>
             </span>
@@ -138,8 +135,8 @@ function disLogin($note)
             echo '
               <span class="showUser">
               <div class="user__name" onclick="showNavUser()">
-                <img src ="../images/avata/' . $row['image'] . '" class="img__avatar">
-                <span class="userName">' . $row['userName'] . '</span>
+                <img src ="'._WEB_HOST_TEMPLATE.'/images/avata/' . $row['image'] . '" class="img__avatar">
+                <span class="userName">' . $row['username'] . '</span>
                 <i class="fas icon_down_user">&#xf107;</i>
               </div>
               <div class="show__nav__user">
@@ -200,7 +197,7 @@ function showProductHot()
                     <a href="./Product_Detail/sanpham.php?id=' . $row['id_product'] . '">
                       <div class="item-product-hot">
                         <div class="item-product-hot-img">
-                          <img src="./images/' . $row['image'] . '" alt=""/>
+                          <img src="'._WEB_HOST_TEMPLATE.'/images/' . $row['image'] . '" alt=""/>
                           <span class="discount">- ' . $row['discount'] . '%</span>
                           <span class="price">' . number_format($row['price'] - $row['discount'] / 100) . ' đ</span>
                         </div>
@@ -230,7 +227,7 @@ function showProductCategory($category)
         <div class="item-product-hot">
           <div class="item-product-hot-img">
             <img src="'._WEB_HOST_TEMPLATE.'./images/' . $row['image'] . '" alt="" />
-            <a href="./Product_Detail/sanpham.php?id=' . $row["id_product"] . '">Mua Ngay</a>
+            <a href="?module=client&action=detail&id=' . $row["id_product"] . '">Mua Ngay</a>
             <span class="discount">- ' . $row['discount'] . '%</span>
           </div>
           <div class="item-product-information">
@@ -322,7 +319,7 @@ function showProductSimilar($idProduct)
                     echo '
                 <div class="item-product-hot">
                 <div class="item-product-hot-img">
-                  <img src="../images/' . $row['image'] . '" alt="" />
+                  <img src="'._WEB_HOST_TEMPLATE.'/images/' . $row['image'] . '" alt="" />
                   <a href="../Product_Detail/sanpham.php?id=' . $row["id_product"] . '">Mua Ngay</a>
                   <span class="discount">- ' . $row['discount'] . '%</span>
                 </div>
@@ -348,7 +345,7 @@ function showCommentProduct()
     if (isset($_GET['id'])) {
         $idProduct = $_GET['id'];
         $conn = connectDB();
-        $result = $conn->query("SELECT * FROM product PR INNER JOIN comment CM INNER JOIN user U ON CM.id_product = PR.id_product AND CM.user_id = U.idUser  WHERE CM.disabled NOT IN (1) AND PR.id_product=" . $idProduct . "");
+        $result = $conn->query("SELECT * FROM product PR INNER JOIN comment CM INNER JOIN user U ON CM.id_product = PR.id_product AND CM.user_id = U.id WHERE CM.disabled NOT IN (1) AND PR.id_product=" . $idProduct . "");
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 echo '
@@ -388,8 +385,8 @@ function showProductCategory2($category)
             echo '
         <div class="item-product-hot">
           <div class="item-product-hot-img">
-            <img src="../images/' . $row['image'] . '" alt="" />
-            <a href="../Product_Detail/sanpham.php?id=' . $row["id_product"] . '">Mua Ngay</a>
+            <img src="'._WEB_HOST_TEMPLATE.'/images/' . $row['image'] . '" alt="" />
+            <a href="?module=client&action=detail&id=' . $row["id_product"] . '">Mua Ngay</a>
             <span class="discount">- ' . $row['discount'] . '%</span>
           </div>
           <div class="item-product-information">
@@ -415,12 +412,12 @@ function showListCategory($category)
                 echo '
         <div class="item-product-hot">
           <div class="item-product-hot-img">
-            <img src="../images/' . $row['image'] . '" alt="" />
-            <a href="../Product_Detail/sanpham.php?id=' . $row["id_product"] . '">Mua Ngay</a>
+            <img src="'._WEB_HOST_TEMPLATE.'/images/' . $row['image'] . '" alt="" />
+            <a href="?module=client&action=detail&id=' . $row["id_product"] . '">Mua Ngay</a>
             <span class="discount">- ' . $row['discount'] . '%</span>
           </div>
           <div class="item-product-information">
-            <a href="../Product_Detail/sanpham.php?id=' . $row["id_product"] . '" class="name-product">' . $row['nameProduct'] . '</a>
+            <a href="?module=client&action=detail&id=' . $row["id_product"] . '" class="name-product">' . $row['nameProduct'] . '</a>
             <span class="priceSaled-product">' . number_format(ceil(($row['price'] - ($row['price'] * $row['discount']) / 100))) . ' đ</span>
             <span class="price-product">' . number_format($row['price']) . ' đ</span>
           </div>
@@ -436,25 +433,24 @@ function showListCategory($category)
 function showCategory($idCategory)
 {
     $conn = connectDB();
+     $result = $conn->query("SELECT * FROM category");
     if ($idCategory == 0) {
-        $result = $conn->query("SELECT * FROM category");
         if ($result->num_rows > 0) {
             echo '<li><span class="label-Sp">Tất cả</span><input type="checkbox" name="" onclick="chekboxAll()" checked="checked" onsubmit="submit()"></li>';
             while ($row = $result->fetch_assoc()) {
                 echo '
-          <li><span class="label-Sp">' . $row['nameCategory'] . '</span><input type="checkbox" checked="checked" class="valCheckbox" name="valCheckbox[]" value="' . $row['id_category'] . '"></li>
+          <li><span class="label-Sp">' . $row['nameCategory'] . '</span><input type="checkbox" checked="checked" class="valCheckbox" name="valCheckbox[]" value="' . $row['id'] . '"></li>
         ';
             }
         }
     } else {
-        $result = $conn->query("SELECT * FROM category");
         if ($result->num_rows > 0) {
             echo '<li><span class="label-Sp">Tất cả</span><input type="checkbox" name="" onclick="chekboxAll()" onsubmit="submit()"></li>';
             while ($row = $result->fetch_assoc()) {
-                if ($row['id_category'] == $idCategory) {
-                    echo '<li><span class="label-Sp">' . $row['nameCategory'] . '</span><input type="checkbox" class="valCheckbox" name="valCheckbox[]" checked="checked" value="' . $row['id_category'] . '"></li>';
+                if ($row['id'] == $idCategory) {
+                    echo '<li><span class="label-Sp">' . $row['nameCategory'] . '</span><input type="checkbox" class="valCheckbox" name="valCheckbox[]" checked="checked" value="' . $row['id'] . '"></li>';
                 } else {
-                    echo ' <li><span class="label-Sp">' . $row['nameCategory'] . '</span><input type="checkbox" class="valCheckbox" name="valCheckbox[]" value="' . $row['id_category'] . '"></li>';
+                    echo ' <li><span class="label-Sp">' . $row['nameCategory'] . '</span><input type="checkbox" class="valCheckbox" name="valCheckbox[]" value="' . $row['id'] . '"></li>';
                 }
             }
         }
@@ -921,24 +917,24 @@ function personalInformation($idUser)
 {
 
     $conn = connectDB();
-    $result = $conn->query("SELECT * FROM user WHERE idUser = " . $idUser . "");
+    $result = $conn->query("SELECT * FROM user WHERE id = " . $idUser . "");
     $row = $result->fetch_assoc();
     echo '
   <div class="from_group_item">
       <label for="">Họ và Tên:</label>
-      <input type="text" required name="txtFullName" disabled value="' . $row['fullName'] . '">
+      <input type="text" required name="txtFullName"  value="' . $row['fullname'] . '">
   </div>
   <div class="from_group_item">
       <label for="">Email:</label>
-      <input type="text" required name="txtEmail" disabled value="' . $row['email'] . '">
+      <input type="text" required name="txtEmail"  value="' . $row['email'] . '">
   </div>
   <div class="from_group_item">
       <label for="">Số Điện Thoại:</label>
-      <input type="text" required  name="txtPhone" disabled value="' . $row['phone'] . '">
+      <input type="text" required  name="txtPhone"  value="' . $row['phone'] . '">
   </div>
   <div class="from_group_item">
       <label for="">Địa Chỉ:</label>
-      <input type="text" required  name="txtadress" disabled value="' . $row['adress'] . '">
+      <input type="text" required  name="txtadress"  value="' . $row['adress'] . '">
   </div>';
 }
 
@@ -1108,7 +1104,7 @@ function showData()
     if (isset($_POST['editCustomer'])) {
         $conn = connectDB();
         $idCustomer = $_POST['editCustomer'];
-        $result = $conn->query("SELECT * FROM user WHERE idUser='" . $idCustomer . "'");
+        $result = $conn->query("SELECT * FROM user WHERE id='" . $idCustomer . "'");
         if ($result->num_rows > 0) {
             // hiện thị dữ liệu
             $row = $result->fetch_assoc();
@@ -1116,11 +1112,11 @@ function showData()
                 <script type='text/javascript'>
                 document.getElementById('bnt_add_data').innerHTML = 'Cập Nhật';
                 document.getElementById('bnt_add_data').value = 'Cập Nhật';
-                document.getElementById('code__customer').value = '" . $row['idUser'] . "';
-                document.getElementById('name__customer').value = '" . $row['userName'] . "';
+                document.getElementById('code__customer').value = '" . $row['id'] . "';
+                document.getElementById('name__customer').value = '" . $row['username'] . "';
                 document.getElementById('email__customer').value = '" . $row['email'] . "';
                 document.getElementById('role').value = '" . $row['id_role'] . "';
-                document.getElementsByName('inpSpecial')[" . $row['isAdmin'] . "].checked = 'checked';
+                document.getElementsByName('inpSpecial')[" . $row['is_admin'] . "].checked = 'checked';
                 document.querySelector('.title__customer__add').innerText = 'Sửa Thành Viên';
                 document.querySelectorAll('.pass__customer')[0].style.display = 'none';
                 document.querySelector('#pass__customer').disabled = true;
@@ -1394,7 +1390,7 @@ function nameImgLogo()
 function nameimg($idUser)
 {
     $conn = connectDB();
-    $result = $conn->query("SELECT image FROM user WHERE user.idUser = " . $idUser . "");
+    $result = $conn->query("SELECT image FROM user WHERE user.id = " . $idUser . "");
     $row = $result->fetch_assoc();
     echo '<span>' . $row['image'] . '</span>';
 }

@@ -3,7 +3,8 @@ $data = [
     'pageTitle' => 'Cài đặt',
     'title' => "Cài đặt",
     'content' => 'Cài đặt thông tin website',
-    'select' => 2
+    'select' => 2,
+    'style' => 'discount'
 ];
 layout('header', 'admin', $data);
 
@@ -32,20 +33,20 @@ layout('header', 'admin', $data);
                     </div>
                 </form>
             </div>
-            <?php 
-                                    // thêm mới
-                                        if (isset($_POST['bntSubmit']) and $_POST['bntSubmit'] == 'addNew') {
-                                            insertCodeDiscount($_POST['dateDiscount'], $_POST['valueDiscount']);
-                                        }
-                                    // cập nhật
-                                        if (isset($_POST['bntSubmit']) and $_POST['bntSubmit'] == 'update') {
-                                           updateCodeDiscount($_POST['dateDiscount'], $_POST['valueDiscount'], $_POST['idDiscount']);
-                                        }
-                                    // Xóa
-                                        if (isset($_POST['bntDelete'])) {
-                                            deleteCodeDiscount($_POST['bntDelete']);
-                                        }
-                                    ?>
+            <?php
+            // thêm mới
+            if (isset($_POST['bntSubmit']) and $_POST['bntSubmit'] == 'addNew') {
+                insertCodeDiscount($_POST['dateDiscount'], $_POST['valueDiscount']);
+            }
+            // cập nhật
+            if (isset($_POST['bntSubmit']) and $_POST['bntSubmit'] == 'update') {
+                updateCodeDiscount($_POST['dateDiscount'], $_POST['valueDiscount'], $_POST['idDiscount']);
+            }
+            // Xóa
+            if (isset($_POST['bntDelete'])) {
+                deleteCodeDiscount($_POST['bntDelete']);
+            }
+            ?>
             <div class="showListDiscountCode">
                 <div class="title__silder">
                     <h3><i class="fas fa-list"></i>Danh sách mã</h3>
@@ -67,11 +68,11 @@ layout('header', 'admin', $data);
             </div>
         </div>
     </div>
-    <?php if(isset($_POST['bntEdit'])) {
-                                showDateEdit($_POST['bntEdit']);
-                                global $idCode;
-                                $idCode = $_POST['bntEdit'];
-                            } ?>
+    <?php if (isset($_POST['bntEdit'])) {
+        showDateEdit($_POST['bntEdit']);
+        global $idCode;
+        $idCode = $_POST['bntEdit'];
+    } ?>
     <!-- Main-body start -->
 </div>
 <?php
