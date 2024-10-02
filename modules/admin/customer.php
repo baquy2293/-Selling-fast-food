@@ -7,6 +7,7 @@ $data = [
     'style'=>'customer'
 ];
 layout('header', 'admin', $data);
+$msg = getFlashData('msg');
 ?>
 
 <div class="pcoded-inner-content">
@@ -80,26 +81,38 @@ layout('header', 'admin', $data);
                     <!-- end bnt_customer -->
                 </form>
                 <?php 
+                if(!empty($msg)) {
+echo '<p class="btn btn-success btn-block ">'.$msg.'</p>';
+                }
+
+                ?>
+
+                <?php 
                                             if (isset($_POST['bntInsertData'])) {
-                                                $idCustomer = $_POST['idCustomer'];
-                                                $userName = $_POST['nameCustomer']; // tên đăng nhập
-                                                if (isset($_POST['passCustomer'])) {
-                                                    $passWord = $_POST['passCustomer']; // mật khẩu
-                                                }
-                                                $emailCustomer = $_POST['emailCustomer']; // email
+                                                $data = [
+                                                    'fullname'=> $_POST['nameCustomer'],
+                                                    'email'=> $_POST['emailCustomer'],        
+                                                    'is_admin'=>    $_POST['inpSpecial'],
+                                                    'id_role'=> $_POST['role'],  
+                                                ];
+
                                                 if ($_POST['bntInsertData'] == 'Thêm Mới') {
-                                                    $nameUrlImgae =  upFile('upFile','../../images/avata/'); // img
+                                                    $nameUrlImgae =  upFile('upFile','D:/laragon/btl/Sellingfastfood/templates/images/avata/'); // img
+                                                    $data['image']=$_FILES['upFile']['name'];
+                                                    $data['password'] = $_POST['passCustomer'];
+                                                    insert('user', $data);
+
+                                                }else if ($_POST['bntInsertData'] == 'Cập Nhật'){
+
                                                 }
-                                                $role = $_POST['role'];
-                                                // $isAdmin = 0;
-                                                $isAdmin =   $_POST['inpSpecial'];
-                                                
-                                                if ($_POST['bntInsertData'] == 'Thêm Mới') {
-                                                    insertCustomer($userName,$passWord,$emailCustomer,$isAdmin,$role,$nameUrlImgae); 
-                                                } else if($_POST['bntInsertData'] == 'Cập Nhật') {
-                                                    $nameUrlImgae = $_POST['upFile'];
-                                                    updateCustomer($idCustomer,$userName,$emailCustomer,$isAdmin,$role,$nameUrlImgae);
-                                                }
+                                              
+
+                                                // if ($_POST['bntInsertData'] == 'Thêm Mới') {
+                                                //     insertCustomer($userName,$passWord,$emailCustomer,$isAdmin,$role,$nameUrlImgae); 
+                                                // } else if($_POST['bntInsertData'] == 'Cập Nhật') {
+                                                //     $nameUrlImgae = $_POST['upFile'];
+                                                //     updateCustomer($idCustomer,$userName,$emailCustomer,$isAdmin,$role,$nameUrlImgae);
+                                                // }
 
                                             }
                                         ?>
@@ -120,7 +133,7 @@ layout('header', 'admin', $data);
                             </tr>
                             <?php
                                               $conn = connectDB();
-                                              $result = $conn -> query("SELECT * FROM user U INNER JOIN role RL ON U.id_role = RL.id_role WHERE U.userName NOT IN ('admin')");
+                                              $result = $conn -> query("SELECT * FROM user U INNER JOIN role RL ON U.id_role = RL.id_role");
                                               if ($result -> num_rows > 0) {
                                                   while($row = $result -> fetch_assoc()) {
                                                       if ($row['disabled'] !=1) {
@@ -134,7 +147,7 @@ layout('header', 'admin', $data);
                                                         <tr>
                                                             <td><input type="checkbox" name ="checkbox[]" value="'.$row['id'].'"/></td>
                                                             <td class="img__avatar"><img src="'._WEB_HOST_TEMPLATE.'/images/avata/'.$row['image'].'" alt=""></td>
-                                                            <td>'.$row['username'].'</td>
+                                                            <td>'.$row['fullname'].'</td>
                                                             <td>'.$row['email'].'</td>
                                                             <td>'.$row['phone'].'</td>
                                                             <td>'.$row['nameRole'].'</td>

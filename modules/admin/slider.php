@@ -20,10 +20,7 @@ layout('header', 'admin', $data);
                                             <input type="text" value="auto" id="valCategory" name = "valCategory"/> <!-- disabled-->
                                           </div>
                                           <!-- end code__category -->
-                                          <div class="form__group name__category">
-                                            <label for="">Đường Dẫn: </label>
-                                            <input type="text" id="nameCategory" class="valInp" name="nameCategory" />
-                                          </div>
+                                        
                                           <!-- end name__category -->
                                           <div class="form__group img__category">
                                             <label for="">Hình ảnh: </label>

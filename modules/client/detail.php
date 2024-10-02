@@ -17,13 +17,12 @@ layout('header','core',$data);
                 global $idProduct;
                 $idProduct = $_GET['id'];
                 $conn = connectDB();
-                $result = $conn -> query("SELECT product.image, product.nameProduct, product.price, product.discount FROM product INNER JOIN size INNER JOIN category ON product.id_product = category.id AND category.id_size = size.id_size WHERE id_product = ".$idProduct."");
+                $result = $conn -> query("SELECT product.image, product.nameProduct, product.price, product.discount,size.* FROM product INNER JOIN size INNER JOIN category ON product.id_category = category.id AND category.id_size = size.id_size WHERE id_product = ".$idProduct."");
                 if ($result->num_rows > 0) {
-                  $row = $result->fetch_assoc();
-                  var_dump($row);
+                  while ($row = $result->fetch_assoc()) {
                   echo '
                     <div class="img_product">
-                      <img src="'._WEB_HOST_TEMPLATE.'images/'.$row['image'].'" alt="" />
+                      <img src="'._WEB_HOST_TEMPLATE.'/images/'.$row['image'].'" alt="" />
                     </div>
                     <!-- end img_product -->
                     <div class="information_product">
@@ -69,6 +68,7 @@ layout('header','core',$data);
                       <!-- end information_product -->
                       ';
                 }
+              }
               } else {
               }
                   ?>

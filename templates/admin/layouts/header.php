@@ -1,4 +1,5 @@
 <?php
+ob_start();
 $checklogin = isLogin();
 
 if ($checklogin != 'admin') {

@@ -1,3 +1,7 @@
+<?php 
+ob_start();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,7 +32,7 @@
         --bg-color: #B38B60;
         --text-color: #157332;
         --textPrice-color: #d21e1eff;
-    }
+    }f
     </style>
 
 </head>
@@ -182,7 +186,7 @@
                                 ?>
                         </form>
                     </ul>
-                    <a class="linkCart" href="?module=cart&action=shopcart.php">Xem giỏ hàng</a>
+                    <a class="linkCart" href="?module=cart&action=shopcart">Xem giỏ hàng</a>
                 </div>
                 <!-- end showCart -->
             </div>
