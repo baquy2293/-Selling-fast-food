@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost:3306
--- Thời gian đã tạo: Th10 01, 2024 lúc 11:25 AM
+-- Thời gian đã tạo: Th10 06, 2024 lúc 02:28 PM
 -- Phiên bản máy phục vụ: 8.0.30
 -- Phiên bản PHP: 8.1.10
 
@@ -30,8 +30,19 @@ SET time_zone = "+00:00";
 CREATE TABLE `cart` (
   `id` int NOT NULL COMMENT 'mã oder',
   `id_user` int DEFAULT NULL COMMENT 'mã Khách Hàng',
-  `idCartDetail` int DEFAULT NULL COMMENT 'Mã Order chi tiết'
+  `id_product` int DEFAULT NULL COMMENT 'Mã Order chi tiết',
+  `qty` varchar(10) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `size` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `cart`
+--
+
+INSERT INTO `cart` (`id`, `id_user`, `id_product`, `qty`, `size`) VALUES
+(182, 90, 58, '7', 'phần'),
+(183, 90, 36, '1', 'phần'),
+(185, 90, 59, '3', 'Phần');
 
 -- --------------------------------------------------------
 
@@ -45,6 +56,23 @@ CREATE TABLE `cartdetail` (
   `qty` int DEFAULT NULL COMMENT 'Số Lượng',
   `size` varchar(200) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'size'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `cartdetail`
+--
+
+INSERT INTO `cartdetail` (`id_cartDetail`, `id_product`, `qty`, `size`) VALUES
+(166, 62, 1, 'S'),
+(167, 62, 1, 'S'),
+(168, 62, 1, 'S'),
+(169, 62, 1, 'S'),
+(171, 49, 1, 'S'),
+(172, 34, 1, 'Phần'),
+(173, 34, 1, 'Phần'),
+(174, 34, 1, 'Phần'),
+(175, 34, 1, 'Phần'),
+(176, 34, 1, 'Phần'),
+(177, 34, 1, 'Phần');
 
 -- --------------------------------------------------------
 
@@ -66,7 +94,8 @@ CREATE TABLE `category` (
 INSERT INTO `category` (`id`, `nameCategory`, `image`, `id_size`) VALUES
 (30, 'Đồ Ăn Nhanh', 'category01.jpg', 3),
 (31, 'Đồ Uống', 'category02.jpg', 1),
-(32, 'Combo Nhóm', '556X448-B.png', 2);
+(32, 'Combo Nhóm', '556X448-B.png', 2),
+(43, 'Combo Nhóm ư', '556X448-B.png', 2);
 
 -- --------------------------------------------------------
 
@@ -88,7 +117,7 @@ CREATE TABLE `codediscount` (
 --
 
 INSERT INTO `codediscount` (`idCode`, `codeContent`, `discount`, `endDate`, `count`, `id_user`) VALUES
-(46, 'HQd51b36', 30, '2024-09-19', 0, NULL);
+(49, 'HQ277538', 30, '2024-10-27', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -104,6 +133,13 @@ CREATE TABLE `comment` (
   `id_product` int NOT NULL COMMENT 'mã sản phẩm',
   `disabled` bit(1) NOT NULL COMMENT 'Ẩn bình luận'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `comment`
+--
+
+INSERT INTO `comment` (`id`, `content`, `user_id`, `date`, `id_product`, `disabled`) VALUES
+(18, 'zin chao', 90, '2024-10-01 16:26:47', 51, b'1');
 
 -- --------------------------------------------------------
 
@@ -139,7 +175,7 @@ CREATE TABLE `information` (
 --
 
 INSERT INTO `information` (`id`, `logo`, `address`, `phone`, `email`) VALUES
-(1, 'Logoqnt.png', '144 Chiến Thắng Tân Triều Thanh Trì Hà Nội', '0358862502', 'baquycr@gmail.com');
+(1, 'Logoqnt.png', '  144 Chiến Thắng Tân Triều Thanh Trì Hà Nội', '0358862502', 'baquycr@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -11408,8 +11444,19 @@ CREATE TABLE `notification` (
   `title` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Tiêu Đề',
   `content` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Nội Dung',
   `value` varchar(200) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Giá Trị Chinh ',
-  `id_user` int DEFAULT NULL COMMENT 'id user'
+  `id_user` int DEFAULT NULL COMMENT 'id user',
+  `active` varchar(10) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `notification`
+--
+
+INSERT INTO `notification` (`id`, `title`, `content`, `value`, `id_user`, `active`) VALUES
+(187, '44324', 'sfsd', '42342', 90, '1'),
+(188, '44324', 'sfsdsdsdsds', '42342', 90, '0'),
+(189, '44324', 'sfsd', '42342', 90, '1'),
+(190, '44324', 'sfsdsdsdsds', '42342', 90, '1');
 
 -- --------------------------------------------------------
 
@@ -11473,9 +11520,6 @@ INSERT INTO `product` (`id_product`, `nameProduct`, `price`, `discount`, `image`
 (34, 'Pizza Phô Mai Đặc Biệt Delica', 50000, 11, 'product0001.jpeg', 'Pizza phong cách Ý - làm từ nguyên liệu chất lượng tươi mới mỗi ngày.', 30, 92, '2023-08-30'),
 (35, 'Khoai Tây Lutosa Size Lớn - Potato Big Size', 20000, 5, 'product002.jpeg', 'Khoai Tây Lutosa nhập từ Bỉ với độ giòn, ngon càng ăn càng nghiền. Giá chỉ 20k. Khoai tây chuẩn ăn kèm bò bit tết. Hương vị thơm ngon hấp dẫn khó quên khi thưởng thức. Hỗ trợ đặt hàng. Liên hệ tư vấn. Tư vấn ngay. Loại: Lõi vai bò Mỹ, Bắp bò Úc Shinkshan, Chả cá Surimi', 30, 166, '2023-08-30'),
 (36, ' Gà Viên Sốt Hàn Quốc Delica', 35000, 15, 'product003.jpeg', 'Viên gà có lớp vỏ giòn nhẹ, bên trong thịt mềm, nóng hổi với nước sốtcay quyện sánh đậm đà, xen lẫn với đậu phộng rang bùi bùi ăn ngon hết chê!', 30, 81, '2023-08-30'),
-(43, 'Combo Gia Đình', 355000, 10, 'product010.jpeg', '5 Miếng Gà + 2 Burger Tôm + 2 Khoai Tây chiên ( Lớn ) + 3 Lon Pepsi', 32, 168, '2023-09-03'),
-(44, 'Combo Bóng Đá', 85000, 5, 'product011.jpeg', '01 Miếng Gà + 01 Gà Popcorn (Vừa)/ Burger Tôm/ Mì Ý Pop + 01 Bắp Cải Trộn + 01 Pepsi Lon + 1 Phiếu Cào&nbsp;', 32, 91, '2023-09-03'),
-(45, 'Combo Burger Bò khoai giòn tràn phô mai', 91000, 10, 'product012.jpeg', 'Combo Burger Bò Khoai Giòn Tràn Đầy Phô Mai', 32, 8, '2023-09-03'),
 (46, 'Combo Ăn No ', 201000, 15, 'product013.jpeg', 'DELIGHT COMBO. 2 Burger Siêu Nhân Phô Mai Bò Deluxe + 2 Coke + Khoai Tây Chiên + 4 Miếng Gà Nuggets', 32, 14, '2023-09-03'),
 (47, 'Burger Bò Tắm Phô Mai', 56000, 5, 'product014.jpeg', 'Burger Bò Tắm Phô Mai Đậm Vị Phô Mai không bị béo ngậy<br>', 30, 76, '2023-09-03'),
 (49, ' Trà Chanh Việt Quất Bạc Phận', 25000, 5, 'product016.jpeg', 'Trà chanh là sự kết hợp hoàn hảo của trà, chanh và đường tạo nên thức uống chua, ngọt và đăng đắng có hậu của trà. Không chỉ là thức uống độc đáo, trà chanh cũng có tác dụng tích cực cho sức khỏe. Trong trà chanh có chất chống oxy hóa giúp ngăn ngừa ung thư, bảo vệ làn da, chống lão hóa. Bên cạnh đó, vitamin C được bổ sung trong trà chanh giúp thải độc, làm sạch cơ thể tốt và tốt cho hệ tiêu hóa, trị cảm cúm rất hiệu quả.', 31, 4, '2023-09-16'),
@@ -11508,7 +11552,8 @@ CREATE TABLE `role` (
 
 INSERT INTO `role` (`id_role`, `nameRole`) VALUES
 (1, 'Nhân Viên'),
-(2, 'Khách Hàng');
+(2, 'Khách Hàng'),
+(3, 'ADMIN');
 
 -- --------------------------------------------------------
 
@@ -11553,7 +11598,7 @@ CREATE TABLE `slide` (
 INSERT INTO `slide` (`id_silde`, `image`, `link`) VALUES
 (21, 'banner001.jpg', ''),
 (22, 'banner002.jpg', ''),
-(23, 'banner003.png', '');
+(24, 'ar2 .png', '');
 
 -- --------------------------------------------------------
 
@@ -11591,7 +11636,7 @@ CREATE TABLE `user` (
   `email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `phone` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Số Điện Thoại',
   `fullname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Họ và Tên',
-  `is_admin` bit(1) NOT NULL DEFAULT b'0',
+  `is_admin` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
   `id_role` int NOT NULL DEFAULT '2' COMMENT 'Mã Vai Trò',
   `image` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'avata',
   `adress` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Địa Chỉ',
@@ -11604,9 +11649,11 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `username`, `password`, `email`, `phone`, `fullname`, `is_admin`, `id_role`, `image`, `adress`, `disabled`, `forgotToken`) VALUES
-(90, '', '$2y$10$KePiQgxjTq.0EaeRi1FDjO7G2RC3wQ30.uAd8gIi0PD1UW2i7/aza', 'op3477662@gmail.com', '', 'Trịnh bá quý', b'0', 2, 'avata_emty.png', '', b'0', 'f7243cf33503daab9e9ec33104fee76743405438'),
-(91, '', '$2y$10$KePiQgxjTq.0EaeRi1FDjO7G2RC3wQ30.uAd8gIi0PD1UW2i7/aza', 'baquycr@gmail.com', '0358862502', 'Trịnh bá quý', b'1', 2, 'avata_emty.png', '12334', b'0', ''),
-(92, NULL, '$2y$10$.ICbT5yfhVWCqxadbPjXO.F6vZZYEzSdBnI4y.wgqCNXNr8oJC0JS', 'tuhocvaphattrien@gmail.com', NULL, 'Trịnh bá quý', b'0', 2, NULL, NULL, b'1', NULL);
+(90, '', '$2y$10$KePiQgxjTq.0EaeRi1FDjO7G2RC3wQ30.uAd8gIi0PD1UW2i7/aza', 'op3477662@gmail.com', '', 'Trịnh bá quý', '0', 2, 'avata_emty.png', 'thanh hoa', b'0', '72f005a1619d49fe29b1149723d92b8ee2116dbc'),
+(91, '', '$2y$10$KePiQgxjTq.0EaeRi1FDjO7G2RC3wQ30.uAd8gIi0PD1UW2i7/aza', 'baquycr@gmail.com', '0358862502', 'Trịnh bá quý', '1', 0, 'avata_emty.png', '12334', b'0', ''),
+(92, NULL, '$2y$10$.ICbT5yfhVWCqxadbPjXO.F6vZZYEzSdBnI4y.wgqCNXNr8oJC0JS', 'tuhocvaphattrien@gmail.com', NULL, 'Trịnh bá quý', '0', 2, NULL, NULL, b'0', NULL),
+(93, NULL, '$2y$10$.ICbT5yfhVWCqxadbPjXO.F6vZZYEzSdBnI4y.wgqCNXNr8oJC0JS', 'tuhocvaphattrie1n@gmail.com', NULL, 'Trịnh bá quý', '0', 2, NULL, NULL, b'0', NULL),
+(94, NULL, '$2y$10$Hq4Ktdm12zVlcCXtiFM8a.rwgVuDlXkLk3Kua5wfR.UQPKnnrd4mC', 'adgsgsdgsfsfs@gmail.com', NULL, 'PASSWORD_DEFAULT', '0', 1, 'GYM.jpg', NULL, b'0', NULL);
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -11618,7 +11665,7 @@ INSERT INTO `user` (`id`, `username`, `password`, `email`, `phone`, `fullname`, 
 ALTER TABLE `cart`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_user` (`id_user`),
-  ADD KEY `idCartDetail` (`idCartDetail`);
+  ADD KEY `idCartDetail` (`id_product`);
 
 --
 -- Chỉ mục cho bảng `cartdetail`
@@ -11752,31 +11799,31 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT cho bảng `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'mã oder', AUTO_INCREMENT=166;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'mã oder', AUTO_INCREMENT=186;
 
 --
 -- AUTO_INCREMENT cho bảng `cartdetail`
 --
 ALTER TABLE `cartdetail`
-  MODIFY `id_cartDetail` int NOT NULL AUTO_INCREMENT COMMENT 'mã order chi tiết', AUTO_INCREMENT=166;
+  MODIFY `id_cartDetail` int NOT NULL AUTO_INCREMENT COMMENT 'mã order chi tiết', AUTO_INCREMENT=178;
 
 --
 -- AUTO_INCREMENT cho bảng `category`
 --
 ALTER TABLE `category`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'mã loại sản phẩm', AUTO_INCREMENT=42;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'mã loại sản phẩm', AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT cho bảng `codediscount`
 --
 ALTER TABLE `codediscount`
-  MODIFY `idCode` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `idCode` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT cho bảng `comment`
 --
 ALTER TABLE `comment`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'Mã Bình Luận', AUTO_INCREMENT=18;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'Mã Bình Luận', AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT cho bảng `feedback`
@@ -11794,7 +11841,7 @@ ALTER TABLE `information`
 -- AUTO_INCREMENT cho bảng `notification`
 --
 ALTER TABLE `notification`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'Mã Thông Báo', AUTO_INCREMENT=186;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'Mã Thông Báo', AUTO_INCREMENT=191;
 
 --
 -- AUTO_INCREMENT cho bảng `oderdetail`
@@ -11812,13 +11859,13 @@ ALTER TABLE `orderr`
 -- AUTO_INCREMENT cho bảng `product`
 --
 ALTER TABLE `product`
-  MODIFY `id_product` int NOT NULL AUTO_INCREMENT COMMENT 'mã sản phẩm', AUTO_INCREMENT=66;
+  MODIFY `id_product` int NOT NULL AUTO_INCREMENT COMMENT 'mã sản phẩm', AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT cho bảng `role`
 --
 ALTER TABLE `role`
-  MODIFY `id_role` int NOT NULL AUTO_INCREMENT COMMENT 'Mã Vai trò', AUTO_INCREMENT=3;
+  MODIFY `id_role` int NOT NULL AUTO_INCREMENT COMMENT 'Mã Vai trò', AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT cho bảng `size`
@@ -11830,7 +11877,7 @@ ALTER TABLE `size`
 -- AUTO_INCREMENT cho bảng `slide`
 --
 ALTER TABLE `slide`
-  MODIFY `id_silde` int NOT NULL AUTO_INCREMENT COMMENT 'mã slider', AUTO_INCREMENT=24;
+  MODIFY `id_silde` int NOT NULL AUTO_INCREMENT COMMENT 'mã slider', AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT cho bảng `status`
@@ -11842,7 +11889,7 @@ ALTER TABLE `status`
 -- AUTO_INCREMENT cho bảng `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
 -- Các ràng buộc cho các bảng đã đổ
@@ -11852,8 +11899,8 @@ ALTER TABLE `user`
 -- Các ràng buộc cho bảng `cart`
 --
 ALTER TABLE `cart`
-  ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`),
-  ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`idCartDetail`) REFERENCES `cartdetail` (`id_cartDetail`);
+  ADD CONSTRAINT `car_fk_pr` FOREIGN KEY (`id_product`) REFERENCES `product` (`id_product`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`);
 
 --
 -- Các ràng buộc cho bảng `cartdetail`
@@ -11873,6 +11920,12 @@ ALTER TABLE `category`
 ALTER TABLE `comment`
   ADD CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   ADD CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`id_product`) REFERENCES `product` (`id_product`);
+
+--
+-- Các ràng buộc cho bảng `notification`
+--
+ALTER TABLE `notification`
+  ADD CONSTRAINT `fk_noti_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
