@@ -98,12 +98,12 @@ layout('header', 'core', $data);
                 $result = $conn->query("SELECT * FROM category");
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
-                        echo '<a href="?module=product&action=&idML=' . $row['id'] . '" class="linkCategory">
+                        echo '
                           <div class="item list-category-item">
                             <img src="' . _WEB_HOST_TEMPLATE . '/images/' . $row['image'] . '" alt="" />
                             <span>' . $row['nameCategory'] . '</span>
                           </div>
-                        </a>
+                        
                   ';
                     }
                 }
