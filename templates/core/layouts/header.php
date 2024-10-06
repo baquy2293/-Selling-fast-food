@@ -171,7 +171,7 @@ ob_start();
 
 //                                        $conn = connectDB();
 //                                        $idCartDetail = $_POST['deleteCart'];
-                                        delete('cart', 'cart.idCartDetail =' . $idCartDetail);
+                                        delete('cart', 'cart.id_product =' . $idCartDetail);
 //                                        $sql1 = "DELETE FROM cart WHERE cart.idCartDetail =" . $idCartDetail . ""; // xóa giỏi hàng có mã hàng chi tiết đấy
 //                                        $conn->query($sql1);
 

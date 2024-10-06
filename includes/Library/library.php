@@ -3,10 +3,10 @@
 // hiển thị logo
 function logo($note)
 {
-//    $conn = connectDB();
-//    $result = $conn->query("SELECT * FROM information ");
-//    $row = $result->fetch_assoc();
-    $row = firstRaw("SELECT * FROM information ");
+   $conn = connectDB();
+   $result = $conn->query("SELECT * FROM information ");
+   $row = $result->fetch_assoc();
+    // $row = firstRaw("SELECT * FROM information ");
     if ($note == 0) {
         echo '
             <img class="img-fluid" src="' . _WEB_HOST_TEMPLATE . '/images/' . $row['logo'] . '" alt="Theme-Logo" />
@@ -257,20 +257,22 @@ function buyProduct()
 {
     if (isset($_GET['id'])) {
         if (isset($_POST['bnt_buyNow']) || isset($_POST['bnt_add_cart'])) {
-            $conn = connectDB();
-            $size = $_POST['listChooseSize']; //size
-            $idProduct = $_GET['id']; //id sản phẩm
-            $idCustomer = $_SESSION['user']['id']; //id user
-            $qty = $_POST['valQty']; // số lượng
+$slq = "SELECT * from cart where id_product=".$_POST['id_product']."";
+$count = getNumRows($slq);
+$conn = connectDB();
+$result = $conn -> query(''. $slq.'')->fetch_assoc();
 
-            $sql1 = "INSERT INTO cartdetail VALUES (null,'$idProduct','$qty','$size')";
+if ($count == 0) {
+                $sql1 = "INSERT INTO cart VALUES (null,'{$_SESSION['user']['id']}','{$_POST['id_product']}','{$_POST['valQty']}','{$_POST['listChooseSize']}')";
             $result2 = $conn->query($sql1);
+}else {
+    $qty = intval($_POST['valQty']) + intval($result['qty']);
+            $sql = "UPDATE cart SET qty = $qty where id_product=".$_POST['id_product']."";
+            $result2 = $conn->query($sql);    
+}
 
-            $result = $conn->query("SELECT max(id_cartDetail) AS 'id_cartDetail' FROM cartdetail");
-            $row = $result->fetch_assoc();
+redirect("?module=home&action=views");
 
-            $sql2 = "INSERT INTO cart VALUES (null," . $idCustomer . "," . $row['id_cartDetail'] . ")";
-            $result3 = $conn->query($sql2);
         }
     }
 }
@@ -457,20 +459,34 @@ function disTxtSearch($txtSearch)
 function showNotification($idUser)
 {
     $conn = connectDB();
-    $result = $conn->query("SELECT * FROM notification WHERE id = " . $idUser . " ORDER BY id DESC ");
+    $result = $conn->query("SELECT * FROM notification WHERE id_user = " . $idUser . " ORDER BY active DESC ");
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            echo '
-        <li>
-          <div class="show_Notification-item">
-            <h5>' . $row['title'] . '</h5>
-            <p>' . $row['content'] . '<span class="codeDiscount"> ' . $row['value'] . '</span></p>
-          </div>
-        </li>';
+
+            if ($row["active"] == 1) {
+                echo '
+                <li class ="bg-secondary">
+                  <div class="show_Notification-item ">
+                    <h5>' . $row['title'] . '</h5>
+                    <p>' . $row['content'] . '<span class="codeDiscount"> ' . $row['value'] . '</span></p>
+                  </div>
+                </li>';
+            } else {
+                echo '
+                <li>
+                  <div class="show_Notification-item">
+                    <h5>' . $row['title'] . '</h5>
+                    <p>' . $row['content'] . '<span class="codeDiscount"> ' . $row['value'] . '</span></p>
+                  </div>
+                </li>';
+            }
+        
         }
     } else {
         echo '<li><div class="show_Notification-item"><h5>Chưa có thông báo nào !</h5></div></li>';
     }
+    // $result = $conn->query("UPDATE notification SET active = 0 WHERE id_user = " . $idUser);
+
 
 }
 
@@ -478,7 +494,7 @@ function showNotification($idUser)
 function showCountNotification($idUser)
 {
     $conn = connectDB();
-    $result = $conn->query("SELECT * FROM notification WHERE id = " . $idUser . " ORDER BY id DESC ");
+    $result = $conn->query("SELECT * FROM notification WHERE active = 1 and  id_user = " . $idUser . " ORDER BY id DESC ");
     if ($result->num_rows > 0) {
         echo $result->num_rows;
     } else {
@@ -492,7 +508,7 @@ function showCountNotification($idUser)
 function showCartMini($idCustomer, $note)
 {
     $conn = connectDB();
-    $result = $conn->query("SELECT * FROM cart C INNER JOIN cartdetail CD INNER JOIN user U INNER JOIN product P ON C.id_user = U.id AND C.idCartDetail = CD.id_cartDetail AND CD.id_product = P.id_product AND U.id =" . $idCustomer . "");
+    $result = $conn->query("SELECT * FROM cart C  INNER JOIN user U INNER JOIN product P ON C.id_user = U.id  AND C.id_product = P.id_product AND U.id =" . $idCustomer . "");
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             if ($note == 1) {
@@ -504,20 +520,20 @@ function showCartMini($idCustomer, $note)
             <span class="totalCash">' . number_format($row['price']) . ' đ</span>
           </div>
           <div class="delete_cart">
-            <button name="deleteCart" value = "' . $row['id_cartDetail'] . '"><i class="fas fa-trash-alt"></i></button>
+            <button name="deleteCart" value = "' . $row['id_product'] . '"><i class="fas fa-trash-alt"></i></button>
           </div>
         </li>
       ';
             } else if ($note == 2) {
                 echo '
         <li>
-          <img src="../images/' . $row['image'] . '" alt="">
+          <img src="'._WEB_HOST_TEMPLATE.'/images/'.$row['image'] . '" alt="">
           <div class="information_product">
             <span class="name_product">' . $row['nameProduct'] . ' <i class="price__item_cart">X ' . $row['qty'] . '</i></span>
             <span class="totalCash">' . number_format($row['price']) . ' đ</span>
           </div>
           <div class="delete_cart">
-            <button name="deleteCart" value = "' . $row['id_cartDetail'] . '"><i class="fas fa-trash-alt"></i></button>
+            <button name="deleteCart" value = "' . $row['id_product'] . '"><i class="fas fa-trash-alt"></i></button>
           </div>
         </li>
       ';
@@ -638,7 +654,7 @@ function apllyDiscount()
         $result = $conn->query("SELECT * FROM codediscount WHERE codeContent = '" . $_GET['inpCode'] . "'");
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                if ($row['id_user'] == $_SESSION['user']['idUser'] && $row['count'] < 1) {
+                if ($row['id_user'] == $_SESSION['user']['id'] && $row['count'] < 1) {
                     if ($row['endDate'] > date("Y-m-d")) {
                         echo '<li><span>Bạn đã được giảm <i>' . $row['discount'] . '</i> % phí ship</span></li>';
                         $_SESSION['infOrder']['feeShip'] = ((100 - $row['discount']) / 100) * 70;
