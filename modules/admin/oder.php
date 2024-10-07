@@ -32,10 +32,9 @@ layout('header', 'admin', $data);
                             $check = "";
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
-                                if ($row[""] == $check) {
-
-
-                        ?>
+                                if($check != $row['code_order']) {
+                                    $check = $row['code_order'];
+?>
                         <div class="list-item">
                             <div class="list-item-title">
                                 <span>Mã Đơn Hàng: <b><?php echo $row['code_order']; ?></b></span>
@@ -70,6 +69,12 @@ layout('header', 'admin', $data);
                             </div>
                             <!-- end list-item-function -->
                         </div>
+                        <?php
+                                    
+                                }
+                                
+                        ?>
+
                         <!-- end list-item -->
                         <?php
                                 // cập nhật trạng thái đơn hàng
@@ -84,8 +89,7 @@ layout('header', 'admin', $data);
 
                                 // Hủy đơn hàng
                                 if (isset($_POST['bntCancelOrder'])) {
-                                    updateStatus($row['idUser'], $_POST['bntCancelOrder'], 6);
-
+                                    updateStatus($row['id_user'], $_POST['bntCancelOrder'], 6);
                                     // thông báo tới người dùng đã thay đổi trạng thái
                                     $resultS = $conn->query("SELECT * FROM status WHERE status.id = " . $_POST['valStatus'] . "");
                                     $rowS = $resultS->fetch_assoc();
