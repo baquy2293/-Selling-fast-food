@@ -19,7 +19,7 @@ if (isPost()) {
         if (!isEmail(trim($body['email']))) {
             $errors['email']['isEmail'] = 'Email không hợp lệ';
         } else {
-//            Kiểm tra email có tồn tại trong DB
+            //            Kiểm tra email có tồn tại trong DB
             $email = trim($body['email']);
             $sql = "SELECT id FROM user WHERE email='$email'";
             if (getRows($sql) > 0) {
@@ -57,7 +57,7 @@ if (isPost()) {
             $subject = "Chào Mừng Bạn Đến Với QNT";
             $message = '
                                             <html>                                                
-                                                <img src="' . _WEB_HOST_TEMPLATE .'/images/logoqnt.png " width="200px" alt="">
+                                                <img src="' . _WEB_HOST_TEMPLATE . '/images/logoqnt.png " width="200px" alt="">
                                                 <h2>Chào Mừng Bạn Đến Với QNT</h2>
                                                 <div class="content">
                                                     <p>Bạn Đã Đăng Ký Thành Công Tài Khoản QNT.<br>
@@ -69,9 +69,21 @@ if (isPost()) {
                                                     <br>
                                                 </div>
                                             </html>';
+                                           
             $sendStatus = sendMail($email, $subject, $message);
             if ($sendStatus) {
                 setFlashData('msg', 'Đăng ký tài khoản thành công');
+                $date = new DateTime();
+                $date->modify('+30 days');
+                $id_user = firstRaw("SELECT * from user where email='".$body['email']."'");
+                $data = [
+                    'codeContent'=>$codeDiscount,
+                    'discount'=> 10,
+                    'endDate'=>$date->format('Y-m-d'),
+                    'id_user'=>$id_user['id'],
+                ];
+                insert('codediscount', $data);
+
             } else {
                 setFlashData('msg', 'Hệ thống đang gặp sự cố! Vui lòng thử lại sau.');
             }
@@ -104,13 +116,13 @@ $old = getFlashData('old');
             <div class="fullname">
                 <label for=""><i class="fas fa-user"></i></label>
                 <input type="text" id="fullname" name="fullname" placeholder="Họ và tên"
-                       value="<?php echo old("fullname", $old); ?>">
+                    value="<?php echo old("fullname", $old); ?>">
             </div>
             <?php echo form_error('fullname', $errors, '<span id="error">', '</span>'); ?>
             <div class="email">
                 <label for=""><i class="fas fa-envelope"></i></label>
                 <input type="email" id="valemail" name="email" placeholder="Email"
-                       value="<?php echo old("email", $old); ?>">
+                    value="<?php echo old("email", $old); ?>">
             </div>
             <?php echo form_error('email', $errors, '<span id="error">', '</span>'); ?>
             <div class="password">
@@ -120,8 +132,7 @@ $old = getFlashData('old');
             <?php echo form_error('password', $errors, '<span id="error">', '</span>'); ?>
             <div class="password">
                 <label for=""><i class="fas fa-lock"></i></label>
-                <input type="password" id="" class="" name="confirm_password"
-                       placeholder="Nhập Lại Mật Khẩu">
+                <input type="password" id="" class="" name="confirm_password" placeholder="Nhập Lại Mật Khẩu">
             </div>
             <?php echo form_error('confirm_password', $errors, '<span id="error">', '</span>'); ?>
             <div class="creatAcc">
@@ -132,7 +143,7 @@ $old = getFlashData('old');
                 <input type="submit" name="bnt-submit" value="Đăng Ký">
             </div>
             <span id="disError">
-                    <?php echo $msg ?>
+                <?php echo $msg ?>
             </span>
         </form>
     </main>
@@ -141,5 +152,3 @@ $old = getFlashData('old');
 layout('footer_login', 'core');
 
 ?>
-
-

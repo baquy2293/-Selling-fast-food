@@ -83,8 +83,8 @@ layout('header', 'admin', $data);
                                     // thông báo tới người dùng đã thay đổi trạng thái
                                     $resultS = $conn->query("SELECT * FROM status WHERE status.id = " . $_POST['valStatus'] . "");
                                     $rowS = $resultS->fetch_assoc();
-                                    insertNotification("Đơn Hàng Đã Chuyển Trạng Thái", "Đơn hàng " . $row['code_order'] . " đã chuyển trạng thái thành ", $rowS['statusName'], $row['id_user']);
-                                
+                                 insertNotification("Đơn Hàng Đã Chuyển Trạng Thái", "Đơn hàng " . $row['code_order'] . " đã chuyển trạng thái thành ", $rowS['statusName'], $row['id_user']);
+                                 redirect('?module=admin&action=oder');
                                 }
 
                                 // Hủy đơn hàng
@@ -93,8 +93,8 @@ layout('header', 'admin', $data);
                                     // thông báo tới người dùng đã thay đổi trạng thái
                                     $resultS = $conn->query("SELECT * FROM status WHERE status.id = " . $_POST['valStatus'] . "");
                                     $rowS = $resultS->fetch_assoc();
-                                    insertNotification("Thông Báo Hủy Đơn", "Đơn hàng " . $row['codeOrder'] . " đã được hủy bởi hệ thống", "", $row['idUser']);
-                                    header('Refresh:0');
+                                    insertNotification("Thông Báo Hủy Đơn", "Đơn hàng " . $row['codeOrder'] . " đã được hủy bởi hệ thống", "", $row['id_user']);
+                                    redirect('?module=admin&action=oder');
                                 }
                             }
                         } else {

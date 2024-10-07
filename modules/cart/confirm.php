@@ -1,7 +1,6 @@
 <?php 
 ob_start();
 if (isset($_SESSION['user'])) {
-    var_dump($_POST);
   if(count($_POST)>1){
     setSession('order',$_POST);
   }
@@ -168,7 +167,8 @@ if (isset($_SESSION['user'])) {
                           $codeContent = mysqli_real_escape_string($conn, $_SESSION['order']['inpCode']);
                             $sql = "SELECT * FROM codediscount WHERE codeContent = '$codeContent'";
                             $result = $conn->query($sql);
-                            $discount  = $result->fetch_assoc()['discount'];
+                            if ($result->num_rows > 0) {
+                            $discount  = $result->fetch_assoc()['discount'];} else {$discount=0;}
                     ?>
                     <div class="orderDetail__information-item">
                         <label for="">Giảm giá: </label>
@@ -233,7 +233,7 @@ if (isset($_SESSION['user'])) {
 <?php } else { ?>
 <script>
 if (confirm('Vui Lòng Đăng Nhập Để Tiếp Tục Chức Năng')) {
-    window.location.assign("../login/index.php");
+    window.location.assign("?module=auth&action=login");
 } else {
     history.back();
 }

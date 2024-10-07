@@ -68,7 +68,7 @@ ob_start();
                         </ul>
                     </div>
                 </span>
-                <?php disLogin(1) ?>
+                <?php disLogin(0) ?>
             </div>
         </div>
         <div class="header_top">

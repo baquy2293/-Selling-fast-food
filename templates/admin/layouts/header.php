@@ -132,7 +132,7 @@ if ($checklogin != 'admin') {
                                 </div>
                             </div>
                         </div>
-                        <a href="?module=admin&action=views">
+                        <a href="?module=home&action=views">
                             <?php logo(0) ?>
                             <span>Quản Lý QNT</span>
                         </a>

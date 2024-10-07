@@ -99,14 +99,14 @@ function disLogin($note)
             echo '
             <span class="showUser">
               <div class="user__name" onclick="showNavUser()">
-                <img src ="./images/avata/' . $row['image'] . '" class="img__avatar">
-                <span class="userName">' . $row['username'] . '</span>
+                <img src ="'._WEB_HOST_TEMPLATE.'/images/avata/' . $row['image'] . '" class="img__avatar">
+                <span class="userName">' . $row['fullname'] . '</span>
                 <i class="fas icon_down_user">&#xf107;</i>
               </div>
               <div class="show__nav__user">
                 <ul>
-                  <li><a href="?module=admin&action=oder">Đơn Hàng</a></li>
-                  <li><a href="?module=admin&action=oder">Lịch Sử Mua Hàng</a></li>
+                  <li><a href="?module=client&action=oder">Đơn Hàng</a></li>
+                  <li><a href="?module=client&action=history_oder">Lịch Sử Mua Hàng</a></li>
                   <li><a href="?module=user&action=setting">Tài Khoản</a></li>
                   <li><a class="disMobl" href="?module=auth&action=logout">Đăng Xuất</a></li>
                 </ul>
@@ -136,15 +136,14 @@ function disLogin($note)
               <span class="showUser">
               <div class="user__name" onclick="showNavUser()">
                 <img src ="'._WEB_HOST_TEMPLATE.'/images/avata/' . $row['image'] . '" class="img__avatar">
-                <span class="userName">' . $row['username'] . '</span>
+                <span class="userName">' . $row['fullname'] . '</span>
                 <i class="fas icon_down_user">&#xf107;</i>
               </div>
               <div class="show__nav__user">
-                <ul>
-                  <li><a href="../UserManager/order.php">Đơn Hàng</a></li>
-                  <li><a href="../UserManager/historyOrder.php">Lịch Sử Mua Hàng</a></li>
-                  <li><a href="../UserManager/settingUser.php">Tài Khoản</a></li>
-                  <li><a href="../Login/logout.php">Đăng Xuất</a>
+                 <ul>
+                  <li><a href="?module=admin&action=oder">Đơn Hàng</a></li>
+                  <li><a href="?module=user&action=setting">Tài Khoản</a></li>
+                  <li><a href="?module=auth&action=logout">Đăng Xuất</a></li>
                 </ul>
               </div>
             </span>
@@ -213,10 +212,8 @@ function showProductHot()
 // Mua Ngay
 // <span class="price-product">'.number_format($row['price']).' đ</span>
 
-// 
 // show sản phẩm theo loại tham số truyền vào là mã loại
-function showProductCategory($category)
-{
+function showProductCategory($category){
     $conn = connectDB();
     $result = $conn->query("SELECT * FROM product WHERE id_category = '" . $category . "' LIMIT 0,8");
     if ($result->num_rows > 0) {
@@ -549,40 +546,28 @@ function showOdered($idCusomer, $codeOrder)
     $conn = connectDB();
     global $totalCashPro;
     $totalCashPro = 0;
-    $result = $conn->query("SELECT P.image, P.nameProduct, OD.qty, P.id_product, OD.price FROM orderr O INNER JOIN oderdetail OD INNER JOIN product P ON O.id_oderDetail = OD.id_oderDetail AND OD.id_product = P.id_product WHERE O.idUser = " . $idCusomer . " AND O.codeOrder = '" . $codeOrder . "'");
+    $result = $conn->query("SELECT P.image, P.nameProduct, O.qty, P.id_product, O.price_receiver FROM orderr O INNER JOIN  product P ON O.id_product = P.id_product WHERE O.id_user = " . $idCusomer . " AND O.code_order = '" . $codeOrder . "'");
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             echo '
       <div class="product_oder-item">
         <div class="product_oder-item-img">
-          <img src="../images/' . $row['image'] . '" alt="">
+          <img src="'._WEB_HOST_TEMPLATE.'/images/' . $row['image'] . '" alt="">
         </div>
         <!-- end product_oder-item-img -->
         <div class="product_oder-item-information">
           <a href="../Product_Detail/sanpham.php?id=' . $row['id_product'] . '"><h4>' . $row['nameProduct'] . '</h4></a>
           <span>Số Lượng: ' . $row['qty'] . '</span>
         </div>
-        <div class="product_oder-item-cash">Đơn Giá: <i>' . number_format($row['price']) . ' đ</i></div>
+        <div class="product_oder-item-cash">Đơn Giá: <i>' . number_format($row['price_receiver']) . ' đ</i></div>
       </div>
       <!-- end product_oder-item  -->
       ';
-            $totalCashPro += ($row['price'] * $row['qty']);
+            $totalCashPro += ($row['price_receiver'] * $row['qty']);
         }
     }
 }
 
-// tính tổng tiền của từng đơn hàng 
-// function totalCashOrder($idCusomer, $orderDate) {
-//   $conn = connectDB();
-//   $totalCash = 0;
-//   $result = $conn -> query("SELECT * FROM orderr O INNER JOIN oderdetail OD INNER JOIN product P ON O.id_oderDetail = OD.id_oderDetail AND OD.id_product = P.id_product WHERE O.idUser = ".$idCusomer." AND O.dateOrder = '".$orderDate."'");
-//   if($result -> num_rows > 0){
-//     while($row = $result -> fetch_assoc()) {
-//       $totalCash += ((($row['price']-($row['price']*$row['discount'])/100))*$row['qty']);
-//     }
-//   }
-//   return number_format($totalCash);
-// }
 
 // hủy đơn hàng
 
@@ -591,8 +576,8 @@ function cancelOrder()
     if (isset($_POST['bntCancel'])) {
         $conn = connectDB();
         $codeOrder = $_POST['bntCancel'];
-        $conn->query("UPDATE orderr SET status = 6 WHERE orderr.codeOrder = '" . $codeOrder . "' AND orderr.idUser = " . $_SESSION['user']['idUser'] . "");
-        header("Refresh:0");
+        $conn->query("UPDATE orderr SET status = 6 WHERE orderr.code_order = '" . $codeOrder . "' AND orderr.id_user = " . $_SESSION['user']['id'] . "");
+        header("?module=client&action=oder");
     }
 }
 
@@ -602,7 +587,8 @@ function successOrder()
     if (isset($_POST['bntSuccess'])) {
         $conn = connectDB();
         $codeOrder = $_POST['bntSuccess'];
-        $conn->query("UPDATE orderr SET status = 5 WHERE orderr.codeOrder = '" . $codeOrder . "' AND orderr.idUser = " . $_SESSION['user']['idUser'] . "");
+        $conn->query("UPDATE orderr SET status = 5 WHERE orderr.code_order = '" . $codeOrder . "' AND orderr.id_user = " . $_SESSION['user']['id'] . "");
+        header("?module=client&action=oder");
     }
 }
 
@@ -707,14 +693,14 @@ function showListCodeDiscount($idUser)
     $result = $conn->query("SELECT * FROM codediscount WHERE codediscount.count < 1 AND codediscount.id_user = " . $idUser . "  AND date(codediscount.endDate)-date(NOW()) > 0");
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            echo '<li class ="listCode"><i class="fas fa-plus-circle"></i><span>' . $row['codeContent'] . '</span> - giảm ' . $row['discount'] . '% phí vận chuyển </li>';
+            echo '<li class ="listCode"><i class="fas fa-plus-circle"></i><span>' . $row['codeContent'] . '</span> - giảm ' . $row['discount'] . '% chi phí </li>';
         }
     }
 
     $resultA = $conn->query("SELECT * FROM codediscount WHERE codediscount.id_user IS null AND date(codediscount.endDate)-date(NOW()) > 0");
     if ($resultA->num_rows > 0) {
         while ($rowA = $resultA->fetch_assoc()) {
-            echo '<li class ="listCode"><i class="fas fa-plus-circle"></i><span>' . $rowA['codeContent'] . '</span> - giảm ' . $rowA['discount'] . '% phí vận chuyển </li>';
+            echo '<li class ="listCode"><i class="fas fa-plus-circle"></i><span>' . $rowA['codeContent'] . '</span> - giảm ' . $rowA['discount'] . '% chi phí </li>';
         }
     }
 }
@@ -725,8 +711,7 @@ function showListCodeDiscount($idUser)
 //  Để có thể insert nhiều bảng cùng lúc thì phải sử dụng vòng lặp. có bao nhiêu sản phẩm trong giỏ hàng thì phải lặp lại bấy nhiêu lần
 //  phải inset bảng oderDetail trước sau đó mới insert được bảng order (! phần này hơi khó hiểu đọc kỹ nhé ae!!)
 // 
-function insertOrder()
-{
+function insertOrder(){
     $idUser = $_SESSION['user']['id'];
     $fullName = $_SESSION['order']['fullName'];
     $phone = $_SESSION['order']['phone'];
@@ -735,7 +720,6 @@ function insertOrder()
     $txtNote = $_SESSION['order']['txtNote'];
     $feeShip = $_SESSION['order']['inpCode'];
     $codeOrder = ('DH00' . str_rand(5));
-
     $conn = connectDB();
     $result1 = $conn->query("SELECT * FROM cart C  INNER JOIN user U INNER JOIN product P ON C.id_user = U.id  AND C.id_product = P.id_product AND U.id =" . $_SESSION['user']['id'] . "");
     if ($result1->num_rows > 0) {
@@ -753,7 +737,6 @@ function insertOrder()
 
     // // Saukhi lưu được dữ liệu vào order rồi thì tiến hành xóa bảng cart
     $conn->query("DELETE FROM cart WHERE cart.id_user = " . $idUser . "");
-
 }
 
 
@@ -763,6 +746,12 @@ function insertNotification($title, $content, $value, $idUser)
 {
     $conn = connectDB();
     $conn->query("INSERT INTO notification VALUES (null,'" . $title . "','" . $content . "','" . $value . "'," . $idUser . ",'" . 1 . "')");
+
+    if (!$conn){
+        die() ."";
+    }
+
+    // $conn->query("INSERT INTO notification VALUES (null,'ádsa','ads','f',101,0)");
 }
 
 //hiện thị lịch sử đơn hàng
@@ -771,11 +760,11 @@ function showHistoryOrderProduct($codeOrder, $idCustomer)
     $connF = connectDB();
     global $totalHistoryItemPrice;
     $totalHistoryItemPrice = 0;
-    $resultF = $connF->query("SELECT P.nameProduct, P.id_product, OD.qty, OD.price FROM orderr O INNER JOIN oderdetail OD INNER JOIN product P ON O.id_oderDetail = OD.id_oderDetail AND OD.id_product = P.id_product WHERE O.idUser = " . $idCustomer . " AND O.codeOrder = '" . $codeOrder . "'");
+    $resultF = $connF->query("SELECT P.nameProduct, P.id_product, O.qty, O.price_receiver FROM orderr as  O  INNER JOIN product P on O.id_product = P.id_product WHERE O.id_user = " . $idCustomer . " AND O.code_order = '" . $codeOrder . "'");
     if ($resultF->num_rows > 0) {
         while ($rowF = $resultF->fetch_assoc()) {
-            echo "| <a href='../Product_Detail/sanpham.php?id=" . $rowF['id_product'] . "'>" . $rowF['nameProduct'] . "</a>" . " |";
-            $totalHistoryItemPrice += ($rowF['price'] * $rowF['qty']);
+            echo "| <a href=''>" . $rowF['nameProduct'] . "</a>" . " |";
+            $totalHistoryItemPrice += ($rowF['price_receiver'] * $rowF['qty']);
         }
     }
 }
@@ -1451,7 +1440,7 @@ function updateStatus($idCusomer, $codeOrder, $valStatus)
 {
     $connC = connectDB();
     $connC->query("UPDATE orderr SET orderr.status = " . $valStatus . " WHERE  orderr.id_user= " . $idCusomer . " AND orderr.code_order = '" . $codeOrder . "'");
-redirect('?module=admin&action=oder');
+    
 }
 
 // hiển thị các mã code hiện tại đang có

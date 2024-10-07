@@ -97,3 +97,5 @@ layout('header','core',$data);
           </div>
         </div>
       </main>
+
+      <script src="<?php echo _WEB_HOST_CORE_TEMPLATE; ?>/assets/js/style_js.js"></script>
