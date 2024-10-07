@@ -1,6 +1,7 @@
 <?php 
 ob_start();
 if (isset($_SESSION['user'])) {
+    var_dump($_POST);
   if(count($_POST)>1){
     setSession('order',$_POST);
   }
@@ -163,23 +164,25 @@ if (isset($_SESSION['user'])) {
                         <span class="price__sale"><?php echo number_format(35000); ?>
                             đ</span>
                     </div>
+                    <?php
+                          $codeContent = mysqli_real_escape_string($conn, $_SESSION['order']['inpCode']);
+                            $sql = "SELECT * FROM codediscount WHERE codeContent = '$codeContent'";
+                            $result = $conn->query($sql);
+                            $discount  = $result->fetch_assoc()['discount'];
+                    ?>
                     <div class="orderDetail__information-item">
                         <label for="">Giảm giá: </label>
                         <span class="price__sale"><?php
-                        $sum = ( $totalPrice+ 35000) ;
-                       echo number_format( $sum*30/100);
+                        $sumdiscount = ( ( $totalPrice+ 35000)* $discount/100) ;
+                       echo number_format( $sumdiscount);
                         ?>
                             đ</span>
                     </div>
                 </div>
                 <div class="total__cash">
                     <label for="">Tổng Tiền:</label>
-                    <?php
-          
-          $sql = "SELECT discount from"
-          
-          ?>
-                    <span><?php echo number_format($totalPrice + $_SESSION['infOrder']['feeShip'] );?> đ</span>
+
+                    <span><?php echo number_format($totalPrice - $sumdiscount );?> đ</span>
                 </div>
                 <div class="bnt__submit">
                     <form action="" method="post">
@@ -204,22 +207,22 @@ if (isset($_SESSION['user'])) {
     <!-- end container -->
 
     <?php 
-    // if (isset($_POST['submitOrder'])) {
-    //   echo '<script>
-    //           document.querySelector(".notification__modal").style.display = "flex";
-    //           var dem=6;
-    //           function xuly(){
-    //             dem--;
-    //             document.getElementById("countTime").innerHTML=dem;
-    //             if (dem>0) setTimeout("xuly()",1000);
-    //           }
-    //             xuly();
-    //           setTimeout(function(){
-    //             window.location.assign("../index.php");
-    //           }, 6000);
-    //         </script>';
+    if (isset($_POST['submitOrder'])) {
+      echo '<script>
+              document.querySelector(".notification__modal").style.display = "flex";
+              var dem=6;
+              function xuly(){
+                dem--;
+                document.getElementById("countTime").innerHTML=dem;
+                if (dem>0) setTimeout("xuly()",1000);
+              }
+                xuly();
+              setTimeout(function(){
+                window.location.assign("?module=home&action=views");
+              }, 6000);
+            </script>';
 
-    // }
+    }
   ?>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js' />
     <script src='https://cdn.jsdelivr.net/gh/vietblogdao/js/districts.min.js' />

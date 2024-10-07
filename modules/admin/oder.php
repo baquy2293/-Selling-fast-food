@@ -29,8 +29,12 @@ layout('header', 'admin', $data);
                             INNER JOIN status ON orderr.status = status.id 
                             WHERE orderr.status NOT IN (5,6) 
                             ORDER BY orderr.id DESC");
+                            $check = "";
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
+                                if ($row[""] == $check) {
+
+
                         ?>
                         <div class="list-item">
                             <div class="list-item-title">
