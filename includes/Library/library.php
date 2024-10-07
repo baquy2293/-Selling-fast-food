@@ -741,18 +741,18 @@ function insertOrder()
     if ($result1->num_rows > 0) {
         while ($row = $result1->fetch_assoc()) {
             $price = $row['price'] - ($row['price'] * $row['discount']) / 100;
-            $conn->query("INSERT INTO oderdetail VALUES (null, " . $row['id_product'] . ", " . $price . ", " . $row['qty'] . ",'" . $row['size'] . "') ");
+            // $conn->query("INSERT INTO orderr VALUES (null, " . $row['id_product'] . ", " . $price . ", " . $row['qty'] . ",'" . $row['size'] . "') ");
 
-            $result2 = $conn->query("SELECT max(id_oderDetail) AS 'id_oderDetail' FROM oderdetail");
-            $row1 = $result2->fetch_assoc();
+            // $result2 = $conn->query("SELECT max(id_oderDetail) AS 'id_oderDetail' FROM oderdetail");
+            // $row1 = $result2->fetch_assoc();
 
-            $conn->query("INSERT INTO orderr VALUES (null,'" . $codeOrder . "' ," . $idUser . "," . $row1['id_oderDetail'] . ", 1, '" . $fullName . "', '" . $phone . "', '" . $mail . "', '" . $adress . "', '" . $txtNote . "', " . $feeShip . ", current_timestamp(), '')");
-
+            $conn->query("INSERT INTO orderr VALUES (null,'" . $codeOrder . "' ," . $idUser . ", 1, '" . $fullName . "', '" . $phone . "', '" . $mail . "', '" . $adress . "', '" . $txtNote . "', '" . $feeShip . "', current_timestamp(), '', '" . $row['id_product'] . "', '" . $row['qty']*$row['price'] . "', '" . $row['qty'] . "', '" . $row['size'] . "')");
+            //$conn->query("INSERT INTO orderr VALUES (null,)");
         }
     }
 
     // // Saukhi lưu được dữ liệu vào order rồi thì tiến hành xóa bảng cart
-    // $conn->query("DELETE FROM cart WHERE cart.id_user = " . $idUser . "");
+    $conn->query("DELETE FROM cart WHERE cart.id_user = " . $idUser . "");
 
 }
 
