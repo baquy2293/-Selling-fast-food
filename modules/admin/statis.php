@@ -52,21 +52,18 @@ $result_category = $conn->query("SELECT COUNT(id) AS 'SL', category.nameCategory
                                  GROUP BY category.nameCategory");
 
 // Lấy dữ liệu thống kê doanh thu theo tháng
-$result_revenue = $conn->query("SELECT (SUM(OD.price * OD.qty) + SUM(O.feeShip)) AS 'tongtien', 
-           MONTH(O.dateOrder) AS 'thang', 
-           YEAR(O.dateOrder) AS 'nam' 
-    FROM orderr O 
-    INNER JOIN oderdetail OD 
-    ON O.id_oderDetail = OD.id_oderDetail 
-    WHERE O.status = 5 
-    AND YEAR(O.dateOrder) = 2021 
-    GROUP BY MONTH(O.dateOrder), YEAR(O.dateOrder)");
+$result_revenue = $conn->query("SELECT (SUM(price_receiver *qty) + SUM(freeship)) AS 'tongtien', 
+           MONTH(date_order) AS 'thang', 
+           YEAR(date_order) AS 'nam' 
+    FROM orderr
+    WHERE status = 5 
+    GROUP BY MONTH(date_order), YEAR(date_order)");
 
 // Lấy dữ liệu thống kê sản phẩm bán chạy
-$result_top_products = $conn->query("SELECT COUNT(oderdetail.id_product) AS 'SLSP', product.nameProduct 
-                                     FROM oderdetail 
-                                     INNER JOIN product ON product.id_product = oderdetail.id_product 
-                                     GROUP BY oderdetail.id_product 
+$result_top_products = $conn->query("SELECT COUNT(orderr.id_product) AS 'SLSP', product.nameProduct 
+                                     FROM orderr
+                                     INNER JOIN product ON product.id_product = orderr.id_product 
+                                     GROUP BY orderr.id_product 
                                      LIMIT 10");
 
 $conn->close();

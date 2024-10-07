@@ -3,8 +3,8 @@
 ?>
 <link rel="stylesheet" href="<?php echo _WEB_HOST_CORE_TEMPLATE.'/assets/css/style_shopcart.css?ver='. rand();?>" />
 <div class="container">
-<header>
-                <?php
+    <header>
+        <?php
                 if (isset($_SESSION['user'])) {
                     global $idCustomer;
                     $idCustomer = $_SESSION['user']['id'];
@@ -21,7 +21,7 @@
             ';
                 }
                 ?>
-            </header>
+    </header>
     <!-- end header -->
     <main>
         <div class="main-top">
@@ -53,12 +53,13 @@
                     while($row = $result -> fetch_assoc()){
                       ++$count;
                       $price = $row['price']-($row['price']*$row['discount'])/100;
+                     $qty= $row['qty'];
                         echo '
                           <tr>
                             <td class="mobl1">'.$count.'</td>  
                             <td><img class="imgProduct" style = "width: 80px;" src="'._WEB_HOST_TEMPLATE.'/images/'.$row['image'].'"></img></td>
                             <td>'.$row['nameProduct'].'</td>
-                            <td class="mobl3"><input class="amount" min="1" max="99" type="number" value="'.$row['qty'].'"/></td>
+                            <td class="mobl3"><input class="amount" min="1" max="99" type="number" value="'.$qty.'"/></td>
                             <td>'.$row['size'].'</td>
                             <td class="productCash">'.number_format($price).' đ</td>
                             <td class="totalCash mobl2">'.number_format($price*$row['qty']).' đ</td>
@@ -122,11 +123,26 @@ if (valCash == "0 VND") {
     document.querySelector('.error').style.display = "none";
 }
 </script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js' />
-<script src='https://cdn.jsdelivr.net/gh/vietblogdao/js/districts.min.js' />
-<!-- Messenger Plugin chat Code -->
-<div id="fb-root"></div>
-
-<!-- Your Plugin chat code -->
-<div id="fb-customer-chat" class="fb-customerchat">
-</div>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'> </script>
+<script src='https://cdn.jsdelivr.net/gh/vietblogdao/js/districts.min.js'> </script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Lấy tất cả các input có class 'amount'
+    document.querySelectorAll('.amount').forEach(input => {
+        // Thiết lập giá trị mới cho input nếu cần
+        input.value = parseInt(input.value) || 1; // Nếu giá trị hiện tại không phải là số, đặt là 1
+        
+        // Thêm sự kiện input để xử lý khi giá trị thay đổi
+        input.addEventListener('input', function () {
+            // Kiểm tra giá trị nhập vào có nằm trong giới hạn không
+            if (this.value < 1) {
+                this.value = 1; // Giới hạn tối thiểu
+            } else if (this.value > 99) {
+                this.value = 99; // Giới hạn tối đa
+            }
+            // Cập nhật lại giá trị trong trường hợp có thay đổi
+           input.value = this.value;
+        });
+    });
+});
+</script>

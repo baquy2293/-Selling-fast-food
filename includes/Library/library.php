@@ -485,9 +485,7 @@ function showNotification($idUser)
     } else {
         echo '<li><div class="show_Notification-item"><h5>Chưa có thông báo nào !</h5></div></li>';
     }
-    // $result = $conn->query("UPDATE notification SET active = 0 WHERE id_user = " . $idUser);
-
-
+    $result = $conn->query("UPDATE notification SET active = 0 WHERE id_user = " . $idUser);
 }
 
 //  hiển thị số lượt thông báo
@@ -729,16 +727,17 @@ function showListCodeDiscount($idUser)
 // 
 function insertOrder()
 {
-    $idUser = $_SESSION['user']['idUser'];
-    $fullName = $_SESSION['infOrder']['fullName'];
-    $phone = $_SESSION['infOrder']['phone'];
-    $mail = $_SESSION['infOrder']['mail'];
-    $adress = $_SESSION['infOrder']['adress'];
-    $txtNote = $_SESSION['infOrder']['txtNote'];
-    $feeShip = $_SESSION['infOrder']['feeShip'];
+    $idUser = $_SESSION['user']['id'];
+    $fullName = $_SESSION['order']['fullName'];
+    $phone = $_SESSION['order']['phone'];
+    $mail = $_SESSION['order']['mail'];
+    $adress = $_SESSION['order']['adress'];
+    $txtNote = $_SESSION['order']['txtNote'];
+    $feeShip = $_SESSION['order']['inpCode'];
     $codeOrder = ('DH00' . str_rand(5));
+
     $conn = connectDB();
-    $result1 = $conn->query("SELECT * FROM cart C INNER JOIN cartdetail CD INNER JOIN user U INNER JOIN product P ON C.id_user = U.idUser AND C.idCartDetail = CD.id_cartDetail AND CD.id_product = P.id_product AND U.idUser =" . $_SESSION['user']['idUser'] . "");
+    $result1 = $conn->query("SELECT * FROM cart C  INNER JOIN user U INNER JOIN product P ON C.id_user = U.id  AND C.id_product = P.id_product AND U.id =" . $_SESSION['user']['id'] . "");
     if ($result1->num_rows > 0) {
         while ($row = $result1->fetch_assoc()) {
             $price = $row['price'] - ($row['price'] * $row['discount']) / 100;
@@ -752,81 +751,18 @@ function insertOrder()
         }
     }
 
-    // Saukhi lưu được dữ liệu vào order rồi thì tiến hành xóa bảng cart
-    $conn->query("DELETE FROM cart WHERE cart.id_user = " . $idUser . "");
+    // // Saukhi lưu được dữ liệu vào order rồi thì tiến hành xóa bảng cart
+    // $conn->query("DELETE FROM cart WHERE cart.id_user = " . $idUser . "");
 
 }
 
-// gửi mail khi đặt hàng thành công
-
-function sentMail()
-{
-    $conn = connectDB();
-    $idCustomer = $_SESSION['user']['idUser'];
-    $contentProduct = '';
-    $totalCash = 0;
-    $result = $conn->query("SELECT * FROM cart C INNER JOIN cartdetail CD INNER JOIN user U INNER JOIN product P ON C.id_user = U.idUser AND C.idCartDetail = CD.id_cartDetail AND CD.id_product = P.id_product AND U.idUser =" . $idCustomer . "");
-    while ($row = $result->fetch_assoc()) {
-        $price = ($row['price'] - ($row['price'] * $row['discount']) / 100);
-        $contentProduct .= "
-    <tr>
-      <td>" . $row['nameProduct'] . "</td>
-      <td>" . $row['qty'] . "</td>
-      <td>" . $row['size'] . "</td>
-      <td>" . number_format($price) . " đ</td>
-    </tr>
-    ";
-        $totalCash += $price * $row['qty'];
-    }
-    $email_to = $_SESSION['user']['email'];
-    $subject = "Đặt Hàng Thành Công Trên PoDo";
-    $message = '
-              <html>
-                  
-                  <img src="https://popofastfood.000webhostapp.com/images/logoPopo.png" width="200px" alt="">
-                  <h2>Bạn đã đặt hàng thành công trên PoDo</h2>
-                  <div><img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost/duAn1/UserManager/order.php"></div>
-                  <div class="content">
-                    <table>
-                      <tr>
-                        <th>Tên Sản Phẩm</th>
-                        <th>Số Lượng</th>
-                        <th>Size</th>
-                        <th>Đơn Giá</th>
-                      </tr>
-                      ' . $contentProduct . '
-                      <hr>
-                      <tr>
-                        <td>Tổng Tiền Hàng: </td>
-                        <td colspan="7">' . number_format($totalCash) . ' đ</td>
-                      </tr>
-                      <tr>
-                        <td>Phí Ship: </td>
-                        <td colspan="7">' . number_format($_SESSION['infOrder']['feeShip']) . ' đ</td>
-                      </tr>
-                      <tr>
-                        <td>Tổng Tiền: </td>
-                        <td colspan="7">' . number_format(($_SESSION['infOrder']['feeShip'] + $totalCash)) . ' đ</td>
-                      </tr>
-                    </table>
-                    <br>
-                    <a href="http://localhost/DuAn1/UserManager/order.php">Xem Đơn Hàng</a>
-                  </div>
-              </html>';
-
-    $headers = "From:popo.fastfoodfpt@gmail.com \r\n";
-    $headers .= "MIME-Version: 1.0\r\n";
-    $headers .= "Content-type: text/html\r\n";
-
-    //mail($email_to, $subject, $message, $headers);
-}
 
 // hàm thông báo (Khi đăng ký tài khoản mới, khi đặt hàng thành công, khi thay đổi trạng thái)
 
 function insertNotification($title, $content, $value, $idUser)
 {
     $conn = connectDB();
-    $conn->query("INSERT INTO notification VALUES (null,'" . $title . "','" . $content . "','" . $value . "'," . $idUser . ")");
+    $conn->query("INSERT INTO notification VALUES (null,'" . $title . "','" . $content . "','" . $value . "'," . $idUser . ",'" . 1 . "')");
 }
 
 //hiện thị lịch sử đơn hàng
@@ -851,7 +787,7 @@ function showDistrict()
     $result = $conn->query("SELECT * FROM location_district WHERE location_district.provinceid = '01TTT'");
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            echo '<option value="' . $row['districtid'] . '">' . $row['name'] . '</option>';
+            echo '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
         }
     }
 }
@@ -1472,17 +1408,19 @@ function showProductOrderItem($idCusomer, $codeOrder)
     global $totalCashProduct;
     $totalCashProduct = 0;
     $connA = connectDB();
-    $resultA = $connA->query("SELECT P.image, P.id_product, P.nameProduct, OD.price, OD.size, OD.qty FROM orderr O INNER JOIN oderdetail OD INNER JOIN product P ON O.id_oderDetail = OD.id_oderDetail AND OD.id_product = P.id_product WHERE O.idUser = " . $idCusomer . " AND O.codeOrder = '" . $codeOrder . "'");
+    $resultA = $connA->query("SELECT P.image, P.id_product, P.nameProduct, OD.price_receiver, OD.size, OD.qty FROM orderr OD  INNER JOIN product P ON  OD.id_product = P.id_product WHERE OD.id_user = " . $idCusomer . " AND OD.code_order = '" . $codeOrder . "'");
+   
+
     if ($resultA->num_rows > 0) {
         while ($rowA = $resultA->fetch_assoc()) {
             echo '
             <div class="list-main-product-item">
               <div class="list-main-product-img">
-                  <img src="../../images/' . $rowA['image'] . '" alt="">
+                  <img src="'._WEB_HOST_TEMPLATE.'/images/' . $rowA['image'] . '" alt="">
               </div>
               <div class="list-main-product-name">
                   <a href="../../Product_Detail/sanpham.php?id=' . $rowA['id_product'] . '">' . $rowA['nameProduct'] . '</a>
-                  <span class="price">Đơn Giá: <b>' . number_format($rowA['price']) . ' đ</b></span>
+                  <span class="price">Đơn Giá: <b>' . number_format($rowA['price_receiver']) . ' đ</b></span>
               </div>
               <div class="list-main-product-qty">
                   <span class="size">Size: <b>' . $rowA['size'] . '</b></span>
@@ -1491,7 +1429,7 @@ function showProductOrderItem($idCusomer, $codeOrder)
             </div>
             <!-- end list-main-product-item -->
         ';
-            $totalCashProduct += $rowA['qty'] * $rowA['price'];
+            $totalCashProduct += $rowA['qty'] * $rowA['price_receiver'];
         }
     }
 }
@@ -1512,8 +1450,8 @@ function showStatus($statusNow)
 function updateStatus($idCusomer, $codeOrder, $valStatus)
 {
     $connC = connectDB();
-    $connC->query("UPDATE orderr SET orderr.status = " . $valStatus . " WHERE  orderr.idUser = " . $idCusomer . " AND orderr.codeOrder = '" . $codeOrder . "'");
-
+    $connC->query("UPDATE orderr SET orderr.status = " . $valStatus . " WHERE  orderr.id_user= " . $idCusomer . " AND orderr.code_order = '" . $codeOrder . "'");
+redirect('?module=admin&action=oder');
 }
 
 // hiển thị các mã code hiện tại đang có
