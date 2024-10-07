@@ -1,9 +1,9 @@
 <?php
 if (!defined('_INCODE')) die('Access Deined...');
 
-use btl\Sellingfastfood\includes\phpmailer\PHPMailer;
-use btl\Sellingfastfood\includes\phpmailer\SMTP;
-use btl\Sellingfastfood\includes\phpmailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 function layout($layoutName = 'header', $dir = '', $data = [])
 {

@@ -727,16 +727,17 @@ function showListCodeDiscount($idUser)
 // 
 function insertOrder()
 {
-    $idUser = $_SESSION['user']['idUser'];
-    $fullName = $_SESSION['infOrder']['fullName'];
-    $phone = $_SESSION['infOrder']['phone'];
-    $mail = $_SESSION['infOrder']['mail'];
-    $adress = $_SESSION['infOrder']['adress'];
-    $txtNote = $_SESSION['infOrder']['txtNote'];
-    $feeShip = $_SESSION['infOrder']['feeShip'];
+    $idUser = $_SESSION['user']['id'];
+    $fullName = $_SESSION['order']['fullName'];
+    $phone = $_SESSION['order']['phone'];
+    $mail = $_SESSION['order']['mail'];
+    $adress = $_SESSION['order']['adress'];
+    $txtNote = $_SESSION['order']['txtNote'];
+    $feeShip = $_SESSION['order']['inpCode'];
     $codeOrder = ('DH00' . str_rand(5));
+
     $conn = connectDB();
-    $result1 = $conn->query("SELECT * FROM cart C INNER JOIN cartdetail CD INNER JOIN user U INNER JOIN product P ON C.id_user = U.idUser AND C.idCartDetail = CD.id_cartDetail AND CD.id_product = P.id_product AND U.idUser =" . $_SESSION['user']['idUser'] . "");
+    $result1 = $conn->query("SELECT * FROM cart C  INNER JOIN user U INNER JOIN product P ON C.id_user = U.id  AND C.id_product = P.id_product AND U.id =" . $_SESSION['user']['id'] . "");
     if ($result1->num_rows > 0) {
         while ($row = $result1->fetch_assoc()) {
             $price = $row['price'] - ($row['price'] * $row['discount']) / 100;
@@ -750,74 +751,11 @@ function insertOrder()
         }
     }
 
-    // Saukhi lưu được dữ liệu vào order rồi thì tiến hành xóa bảng cart
-    $conn->query("DELETE FROM cart WHERE cart.id_user = " . $idUser . "");
+    // // Saukhi lưu được dữ liệu vào order rồi thì tiến hành xóa bảng cart
+    // $conn->query("DELETE FROM cart WHERE cart.id_user = " . $idUser . "");
 
 }
 
-// gửi mail khi đặt hàng thành công
-
-function sentMail()
-{
-    $conn = connectDB();
-    $idCustomer = $_SESSION['user']['idUser'];
-    $contentProduct = '';
-    $totalCash = 0;
-    $result = $conn->query("SELECT * FROM cart C INNER JOIN cartdetail CD INNER JOIN user U INNER JOIN product P ON C.id_user = U.idUser AND C.idCartDetail = CD.id_cartDetail AND CD.id_product = P.id_product AND U.idUser =" . $idCustomer . "");
-    while ($row = $result->fetch_assoc()) {
-        $price = ($row['price'] - ($row['price'] * $row['discount']) / 100);
-        $contentProduct .= "
-    <tr>
-      <td>" . $row['nameProduct'] . "</td>
-      <td>" . $row['qty'] . "</td>
-      <td>" . $row['size'] . "</td>
-      <td>" . number_format($price) . " đ</td>
-    </tr>
-    ";
-        $totalCash += $price * $row['qty'];
-    }
-    $email_to = $_SESSION['user']['email'];
-    $subject = "Đặt Hàng Thành Công Trên PoDo";
-    $message = '
-              <html>
-                  
-                  <img src="https://popofastfood.000webhostapp.com/images/logoPopo.png" width="200px" alt="">
-                  <h2>Bạn đã đặt hàng thành công trên PoDo</h2>
-                  <div><img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost/duAn1/UserManager/order.php"></div>
-                  <div class="content">
-                    <table>
-                      <tr>
-                        <th>Tên Sản Phẩm</th>
-                        <th>Số Lượng</th>
-                        <th>Size</th>
-                        <th>Đơn Giá</th>
-                      </tr>
-                      ' . $contentProduct . '
-                      <hr>
-                      <tr>
-                        <td>Tổng Tiền Hàng: </td>
-                        <td colspan="7">' . number_format($totalCash) . ' đ</td>
-                      </tr>
-                      <tr>
-                        <td>Phí Ship: </td>
-                        <td colspan="7">' . number_format($_SESSION['infOrder']['feeShip']) . ' đ</td>
-                      </tr>
-                      <tr>
-                        <td>Tổng Tiền: </td>
-                        <td colspan="7">' . number_format(($_SESSION['infOrder']['feeShip'] + $totalCash)) . ' đ</td>
-                      </tr>
-                    </table>
-                    <br>
-                    <a href="http://localhost/DuAn1/UserManager/order.php">Xem Đơn Hàng</a>
-                  </div>
-              </html>';
-
-    $headers = "From:popo.fastfoodfpt@gmail.com \r\n";
-    $headers .= "MIME-Version: 1.0\r\n";
-    $headers .= "Content-type: text/html\r\n";
-
-    //mail($email_to, $subject, $message, $headers);
-}
 
 // hàm thông báo (Khi đăng ký tài khoản mới, khi đặt hàng thành công, khi thay đổi trạng thái)
 
@@ -849,7 +787,7 @@ function showDistrict()
     $result = $conn->query("SELECT * FROM location_district WHERE location_district.provinceid = '01TTT'");
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            echo '<option value="' . $row['districtid'] . '">' . $row['name'] . '</option>';
+            echo '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
         }
     }
 }
@@ -1513,7 +1451,7 @@ function updateStatus($idCusomer, $codeOrder, $valStatus)
 {
     $connC = connectDB();
     $connC->query("UPDATE orderr SET orderr.status = " . $valStatus . " WHERE  orderr.id_user= " . $idCusomer . " AND orderr.code_order = '" . $codeOrder . "'");
-
+redirect('?module=admin&action=oder');
 }
 
 // hiển thị các mã code hiện tại đang có

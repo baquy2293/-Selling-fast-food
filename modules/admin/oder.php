@@ -75,6 +75,7 @@ layout('header', 'admin', $data);
                                     $resultS = $conn->query("SELECT * FROM status WHERE status.id = " . $_POST['valStatus'] . "");
                                     $rowS = $resultS->fetch_assoc();
                                     insertNotification("Đơn Hàng Đã Chuyển Trạng Thái", "Đơn hàng " . $row['code_order'] . " đã chuyển trạng thái thành ", $rowS['statusName'], $row['id_user']);
+                                
                                 }
 
                                 // Hủy đơn hàng
