@@ -24,60 +24,57 @@ layout('header', 'admin', $data);
                     <div class="order__content-list">
                         <?php
                         $conn = connectDB();
-                        $result = $conn->query("SELECT DISTINCT orderr.idOder, orderr.codeOrder, orderr.dateOrder, orderr.idUser, status.statusName, status.id 
+                        $result = $conn->query("SELECT DISTINCT orderr.id, orderr.code_order, orderr.date_order, orderr.id_user, status.statusName, status.id 
                             FROM orderr 
                             INNER JOIN status ON orderr.status = status.id 
                             WHERE orderr.status NOT IN (5,6) 
-                            ORDER BY orderr.idOder DESC");
+                            ORDER BY orderr.id DESC");
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                         ?>
-                                <div class="list-item">
-                                    <div class="list-item-title">
-                                        <span>Mã Đơn Hàng: <b><?php echo $row['codeOrder']; ?></b></span>
-                                        <span>Trạng Thái: <b><?php echo $row['statusName']; ?></b></span>
-                                        <span>Ngày Đặt: <?php echo $row['dateOrder']; ?></span>
+                        <div class="list-item">
+                            <div class="list-item-title">
+                                <span>Mã Đơn Hàng: <b><?php echo $row['code_order']; ?></b></span>
+                                <span>Trạng Thái: <b><?php echo $row['statusName']; ?></b></span>
+                                <span>Ngày Đặt: <?php echo $row['date_order']; ?></span>
+                            </div>
+                            <!-- end list-item-title -->
+                            <div class="list-item-main">
+                                <?php showProductOrderItem($row['id_user'], $row['code_order']); ?>
+                            </div>
+                            <!-- end list-item-main -->
+                            <div class="list-item-function">
+                                <form action="" method="post">
+                                    <div class="form__group-function">
+                                        <button name="bntCancelOrder" value="<?php echo $row['code_order']; ?>"
+                                            class="bnt_cancel">Hủy Đơn Hàng
+                                        </button>
                                     </div>
-                                    <!-- end list-item-title -->
-                                    <div class="list-item-main">
-                                        <?php showProductOrderItem($row['idUser'], $row['codeOrder']); ?>
+                                    <div class="form__group-function">
+                                        <label for="">Trạng Thái: </label>
+                                        <select name="valStatus">
+                                            <?php showStatus($row['id']); ?>
+                                        </select>
+                                        <button name="bntUpdateStatus" value="<?php echo $row['code_order']; ?>"
+                                            class="bnt__update">Cập Nhật
+                                        </button>
                                     </div>
-                                    <!-- end list-item-main -->
-                                    <div class="list-item-function">
-                                        <form action="" method="post">
-                                            <div class="form__group-function">
-                                                <button name="bntCancelOrder"
-                                                    value="<?php echo $row['codeOrder']; ?>"
-                                                    class="bnt_cancel">Hủy Đơn Hàng
-                                                </button>
-                                            </div>
-                                            <div class="form__group-function">
-                                                <label for="">Trạng Thái: </label>
-                                                <select name="valStatus">
-                                                    <?php showStatus($row['id']); ?>
-                                                </select>
-                                                <button name="bntUpdateStatus"
-                                                    value="<?php echo $row['codeOrder']; ?>"
-                                                    class="bnt__update">Cập Nhật
-                                                </button>
-                                            </div>
-                                            <a href="./order_detail.php?idDH=<?php echo $row['codeOrder']; ?>"
-                                                id="linkOrderDetai"><i class="fas fa-angle-double-right"></i> Xem Chi
-                                                Tiết</a>
-                                        </form>
-                                    </div>
-                                    <!-- end list-item-function -->
-                                </div>
-                                <!-- end list-item -->
+                                    <a href="./order_detail.php?idDH=<?php echo $row['code_order']; ?>"
+                                        id="linkOrderDetai"><i class="fas fa-angle-double-right"></i> Xem Chi
+                                        Tiết</a>
+                                </form>
+                            </div>
+                            <!-- end list-item-function -->
+                        </div>
+                        <!-- end list-item -->
                         <?php
                                 // cập nhật trạng thái đơn hàng
                                 if (isset($_POST['bntUpdateStatus'])) {
-                                    updateStatus($row['idUser'], $_POST['bntUpdateStatus'], $_POST['valStatus']);
+                                    updateStatus($row['id_user'], $_POST['bntUpdateStatus'], $_POST['valStatus']);
                                     // thông báo tới người dùng đã thay đổi trạng thái
                                     $resultS = $conn->query("SELECT * FROM status WHERE status.id = " . $_POST['valStatus'] . "");
                                     $rowS = $resultS->fetch_assoc();
-                                    insertNotification("Đơn Hàng Đã Chuyển Trạng Thái", "Đơn hàng " . $row['codeOrder'] . " đã chuyển trạng thái thành ", $rowS['statusName'], $row['idUser']);
-                                    header('Refresh:0');
+                                    insertNotification("Đơn Hàng Đã Chuyển Trạng Thái", "Đơn hàng " . $row['code_order'] . " đã chuyển trạng thái thành ", $rowS['statusName'], $row['id_user']);
                                 }
 
                                 // Hủy đơn hàng

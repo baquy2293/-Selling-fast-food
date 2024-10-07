@@ -485,9 +485,7 @@ function showNotification($idUser)
     } else {
         echo '<li><div class="show_Notification-item"><h5>Chưa có thông báo nào !</h5></div></li>';
     }
-    // $result = $conn->query("UPDATE notification SET active = 0 WHERE id_user = " . $idUser);
-
-
+    $result = $conn->query("UPDATE notification SET active = 0 WHERE id_user = " . $idUser);
 }
 
 //  hiển thị số lượt thông báo
@@ -826,7 +824,7 @@ function sentMail()
 function insertNotification($title, $content, $value, $idUser)
 {
     $conn = connectDB();
-    $conn->query("INSERT INTO notification VALUES (null,'" . $title . "','" . $content . "','" . $value . "'," . $idUser . ")");
+    $conn->query("INSERT INTO notification VALUES (null,'" . $title . "','" . $content . "','" . $value . "'," . $idUser . ",'" . 1 . "')");
 }
 
 //hiện thị lịch sử đơn hàng
@@ -1472,17 +1470,19 @@ function showProductOrderItem($idCusomer, $codeOrder)
     global $totalCashProduct;
     $totalCashProduct = 0;
     $connA = connectDB();
-    $resultA = $connA->query("SELECT P.image, P.id_product, P.nameProduct, OD.price, OD.size, OD.qty FROM orderr O INNER JOIN oderdetail OD INNER JOIN product P ON O.id_oderDetail = OD.id_oderDetail AND OD.id_product = P.id_product WHERE O.idUser = " . $idCusomer . " AND O.codeOrder = '" . $codeOrder . "'");
+    $resultA = $connA->query("SELECT P.image, P.id_product, P.nameProduct, OD.price_receiver, OD.size, OD.qty FROM orderr OD  INNER JOIN product P ON  OD.id_product = P.id_product WHERE OD.id_user = " . $idCusomer . " AND OD.code_order = '" . $codeOrder . "'");
+   
+
     if ($resultA->num_rows > 0) {
         while ($rowA = $resultA->fetch_assoc()) {
             echo '
             <div class="list-main-product-item">
               <div class="list-main-product-img">
-                  <img src="../../images/' . $rowA['image'] . '" alt="">
+                  <img src="'._WEB_HOST_TEMPLATE.'/images/' . $rowA['image'] . '" alt="">
               </div>
               <div class="list-main-product-name">
                   <a href="../../Product_Detail/sanpham.php?id=' . $rowA['id_product'] . '">' . $rowA['nameProduct'] . '</a>
-                  <span class="price">Đơn Giá: <b>' . number_format($rowA['price']) . ' đ</b></span>
+                  <span class="price">Đơn Giá: <b>' . number_format($rowA['price_receiver']) . ' đ</b></span>
               </div>
               <div class="list-main-product-qty">
                   <span class="size">Size: <b>' . $rowA['size'] . '</b></span>
@@ -1491,7 +1491,7 @@ function showProductOrderItem($idCusomer, $codeOrder)
             </div>
             <!-- end list-main-product-item -->
         ';
-            $totalCashProduct += $rowA['qty'] * $rowA['price'];
+            $totalCashProduct += $rowA['qty'] * $rowA['price_receiver'];
         }
     }
 }
@@ -1512,7 +1512,7 @@ function showStatus($statusNow)
 function updateStatus($idCusomer, $codeOrder, $valStatus)
 {
     $connC = connectDB();
-    $connC->query("UPDATE orderr SET orderr.status = " . $valStatus . " WHERE  orderr.idUser = " . $idCusomer . " AND orderr.codeOrder = '" . $codeOrder . "'");
+    $connC->query("UPDATE orderr SET orderr.status = " . $valStatus . " WHERE  orderr.id_user= " . $idCusomer . " AND orderr.code_order = '" . $codeOrder . "'");
 
 }
 
